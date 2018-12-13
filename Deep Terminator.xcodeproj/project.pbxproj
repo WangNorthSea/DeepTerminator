@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		300F18D921C256A500E84144 /* ACautomaton.c in Sources */ = {isa = PBXBuildFile; fileRef = 300F18D821C256A500E84144 /* ACautomaton.c */; };
 		307F153521C1E18800324B07 /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = 307F153421C1E18800324B07 /* main.c */; };
 		3098805C21C1F93B005CA395 /* ArrayOp.c in Sources */ = {isa = PBXBuildFile; fileRef = 3098805B21C1F93B005CA395 /* ArrayOp.c */; };
 		3098805E21C20184005CA395 /* ChangeBoard.c in Sources */ = {isa = PBXBuildFile; fileRef = 3098805D21C20184005CA395 /* ChangeBoard.c */; };
@@ -27,6 +28,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		300F18D821C256A500E84144 /* ACautomaton.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ACautomaton.c; sourceTree = "<group>"; };
 		307F153121C1E18800324B07 /* Deep Terminator */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "Deep Terminator"; sourceTree = BUILT_PRODUCTS_DIR; };
 		307F153421C1E18800324B07 /* main.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
 		3098805B21C1F93B005CA395 /* ArrayOp.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ArrayOp.c; sourceTree = "<group>"; };
@@ -67,19 +69,19 @@
 			isa = PBXGroup;
 			children = (
 				307F153421C1E18800324B07 /* main.c */,
-				307F153B21C1E1D100324B07 /* Interface */,
+				307F153B21C1E1D100324B07 /* IO interface */,
 				307F153C21C1E21700324B07 /* AI Engine */,
 			);
 			path = "Deep Terminator";
 			sourceTree = "<group>";
 		};
-		307F153B21C1E1D100324B07 /* Interface */ = {
+		307F153B21C1E1D100324B07 /* IO interface */ = {
 			isa = PBXGroup;
 			children = (
 				3098805D21C20184005CA395 /* ChangeBoard.c */,
 				3098806221C206ED005CA395 /* Trans.c */,
 			);
-			path = Interface;
+			path = "IO interface";
 			sourceTree = "<group>";
 		};
 		307F153C21C1E21700324B07 /* AI Engine */ = {
@@ -88,6 +90,7 @@
 				3098806121C2032D005CA395 /* board.h */,
 				3098805B21C1F93B005CA395 /* ArrayOp.c */,
 				3098805F21C202D1005CA395 /* Initialize.c */,
+				300F18D821C256A500E84144 /* ACautomaton.c */,
 			);
 			path = "AI Engine";
 			sourceTree = "<group>";
@@ -150,6 +153,7 @@
 			files = (
 				3098805C21C1F93B005CA395 /* ArrayOp.c in Sources */,
 				307F153521C1E18800324B07 /* main.c in Sources */,
+				300F18D921C256A500E84144 /* ACautomaton.c in Sources */,
 				3098805E21C20184005CA395 /* ChangeBoard.c in Sources */,
 				3098806321C206ED005CA395 /* Trans.c in Sources */,
 				3098806021C202D1005CA395 /* Initialize.c in Sources */,

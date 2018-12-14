@@ -85,7 +85,7 @@ void init(void) {
     int i;
     for (i = 0; i < 225; i++)
         board[i] = Empty;
-    pos = (char *)malloc(1);
+    pos = (int *)malloc(sizeof(int));
     pos[0] = -1;
     initACautomaton();
 }

@@ -9,22 +9,20 @@
 #include <stdlib.h>
 #include "board.h"
 
-extern char * append(char * array, int value);
-extern int count(char * array);
+extern int * append(int * array, int value);
+extern int intCount(int * array);
 
 void put(int index) {
     pos = append(pos, index);
-    if (count(pos) % 2 != 0) {
+    if (intCount(pos) % 2 != 0)
         board[index] = Black;
-    }
-    else {
+    else
         board[index] = White;
-    }
 }
 
 void removePiece(void) {
-    int pieceCount = count(pos);
-    board[pos[pieceCount - 1]] = Empty;
-    pos[pieceCount - 1] = -1;
-    pos = (char *)realloc(pos, pieceCount);
+    int piececharCount = intCount(pos);
+    board[pos[piececharCount - 1]] = Empty;
+    pos[piececharCount - 1] = -1;
+    pos = (int *)realloc(pos, sizeof(int) * piececharCount);
 }

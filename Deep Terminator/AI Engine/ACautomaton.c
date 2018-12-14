@@ -6,12 +6,11 @@
 //  Copyright © 2018 UCAS Developers. All rights reserved.
 //
 
-#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include "ACautomaton.h"
 
-extern int count(char * array);
+extern int charCount(char * array);
 
 //构建字典树
 void insert(char * str, struct node * root, int id) {
@@ -67,13 +66,13 @@ void buildFailPtr(struct node * root) {
     }
 }
 
-int * recognize(char * pattern, struct node * root, int keyCount) {
+int * recognize(char * pattern, struct node * root, int keycharCount) {
     struct node * p = root;
     int i;
-    int * result = (int *)malloc(sizeof(int) * keyCount);
-    result = memset(result, 0, sizeof(int) * keyCount);
+    int * result = (int *)malloc(sizeof(int) * keycharCount);
+    result = memset(result, 0, sizeof(int) * keycharCount);
     
-    int len = count(pattern);
+    int len = charCount(pattern);
     
     for (i = 0; i < len; i++) {
         int x = pattern[i];

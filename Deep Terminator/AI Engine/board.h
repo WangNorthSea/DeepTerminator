@@ -15,6 +15,6 @@
 #define Stop -1
 
 char board[225];
-char * pos;
+int * pos;
 
 #endif /* board_h */

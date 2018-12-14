@@ -8,15 +8,21 @@
 
 #include <stdlib.h>
 
-int count(char * array) {
+int charCount(char * array) {
     int i = 0;
     while (array[i] != -1) { i++; }
     return i;
 }
 
-char * append(char * array, int value) {
-    int len = count(array) + 1;
-    array = (char *)realloc(array, sizeof(int) * (len + 1));
+int intCount(int * array) {
+    int i = 0;
+    while (array[i] != -1) { i++; }
+    return i;
+}
+
+int * append(int * array, int value) {
+    int len = intCount(array) + 1;
+    array = (int *)realloc(array, sizeof(int) * (len + 1));
     array[len - 1] = value;
     array[len] = -1;
     return array;
@@ -24,24 +30,24 @@ char * append(char * array, int value) {
 
 char * concat(char * first, char * second) {
     int i;
-    if (!count(first)) {
-        char * new = (char *)malloc(sizeof(int) * (count(second) + 1));
-        for (i = 0; i < count(second); i++) {
+    if (!charCount(first)) {
+        char * new = (char *)malloc(sizeof(int) * (charCount(second) + 1));
+        for (i = 0; i < charCount(second); i++) {
             new[i] = second[i];
         }
         new[i] = -1;
         return new;
     }
-    if (!count(second)) {
-        char * new = (char *)malloc(sizeof(int) * (count(first) + 1));
-        for (i = 0; i < count(first); i++) {
+    if (!charCount(second)) {
+        char * new = (char *)malloc(sizeof(int) * (charCount(first) + 1));
+        for (i = 0; i < charCount(first); i++) {
             new[i] = first[i];
         }
         new[i] = -1;
         return new;
     }
-    int start = count(first);
-    int limit = count(second) + start;
+    int start = charCount(first);
+    int limit = charCount(second) + start;
     char * new = (char *)malloc(sizeof(int) * (limit + 1));
     for (i = 0; i < start; i++) {
         new[i] = first[i];

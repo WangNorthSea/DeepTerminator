@@ -15,28 +15,24 @@ extern void put(int index);
 extern void removePiece(void);
 extern int transCoordinateToIndex(char * position);
 
-extern int evaluate(char * board, int color);
+extern int evaluate(char * board, int color, int nextColor);
 
 int main(void) {
     int i;
     char input[10];
-    int score;
     
     init();
 loop:
     while (1) {
         scanf("%s", input);
-        if (!strcmp(input, "calc")) {
-            printf("Black score = %d\n", evaluate(board, Black));
-            printf("White score = %d\n", evaluate(board, White));
-        }
+        if (!strcmp(input, "calc"))
+            printf("Black score = %d\n", evaluate(board, Black, White));
         else if (!strcmp(input, "exit"))
             goto display;
         else if (!strcmp(input, "remove"))
             removePiece();
-        else {
+        else
             put(transCoordinateToIndex(input));
-        }
     }
 display:
     for (i = 0; i < 225; i++) {

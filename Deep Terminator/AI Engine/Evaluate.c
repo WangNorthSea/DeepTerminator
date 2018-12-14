@@ -132,30 +132,30 @@ int evaluate(char * board, int color, int nextColor) {
         free(tempResultWhite);
     }//右半部分
     
-    //下一个落子方是黑棋，说明最后落子方是白棋，且由于本函数只在最深层被调用，所以当前针对白棋进行评价
+    //下一个落子方是黑棋，说明最后落子方是白棋，且由于本函数只在最深层被调用，所以当前针对黑棋进行评价
     if (nextColor == Black) {
         if (resultBlack[0])       //黑棋在白棋落最后一子前已经五连，说明黑棋已胜利
-            return -10000;
-        else if (resultWhite[0])  //黑棋没有五连，白棋五连，说明白棋已胜利。
             return 10000;
+        else if (resultWhite[0])  //黑棋没有五连，白棋五连，说明白棋已胜利。
+            return -10000;
         else if (resultBlack[1] || resultBlack[2] || resultBlack[3] || resultBlack[4] || resultBlack[5])
-            return -10000;    //黑白棋均没有五连，但黑棋有活四或者冲四，下一个落子方是黑棋，说明黑棋已胜利
+            return 10000;    //黑白棋均没有五连，但黑棋有活四或者冲四，下一个落子方是黑棋，说明黑棋已胜利
         else if (resultWhite[1])
-            return 10000;     //黑棋没有四，白棋有活四，说明白棋已胜利
+            return -10000;     //黑棋没有四，白棋有活四，说明白棋已胜利
         else if (!resultWhite[2] && !resultWhite[3] && !resultWhite[4] && !resultWhite[5] && (resultBlack[6] || resultBlack[7] || resultBlack[8]))
-            return -10000;    //白棋没有四，黑棋有活三，说明黑棋已胜利
+            return 10000;    //白棋没有四，黑棋有活三，说明黑棋已胜利
     }
-    else {
+    else {  //下一个落子方是白棋，说明最后落子方是黑棋，且由于本函数只在最深层被调用，所以当前针对白棋进行评价
         if (resultWhite[0])
-            return -10000;    //白棋在黑棋落最后一子前就已经五连，说明白棋已胜利
+            return 10000;    //白棋在黑棋落最后一子前就已经五连，说明白棋已胜利
         else if (resultBlack[0])
-            return 10000;     //白棋没有五连，黑棋五连，说明黑棋已胜利
+            return -10000;     //白棋没有五连，黑棋五连，说明黑棋已胜利
         else if (resultWhite[1] || resultWhite[2] || resultWhite[3] || resultWhite[4] || resultWhite[5])
-            return -10000;    //黑白棋均没有五连，但白棋有活四或冲四，下一个落子方是白棋，说明白棋已胜利
+            return 10000;    //黑白棋均没有五连，但白棋有活四或冲四，下一个落子方是白棋，说明白棋已胜利
         else if (resultBlack[1])
-            return 10000;     //白棋没有四，黑棋有活四，说明黑棋已胜利
+            return -10000;     //白棋没有四，黑棋有活四，说明黑棋已胜利
         else if (!resultBlack[2] && !resultBlack[3] && !resultBlack[4] && !resultBlack[5] && (resultWhite[6] || resultWhite[7] || resultWhite[8]))
-            return -10000;    //黑棋没有四，白棋有活三，说明白棋已胜利
+            return 10000;    //黑棋没有四，白棋有活三，说明白棋已胜利
     }
     
     scoreBlack = getScore(resultBlack);
@@ -164,5 +164,5 @@ int evaluate(char * board, int color, int nextColor) {
     free(resultBlack);
     free(resultWhite);
     free(tempBoardStr);
-    return color == Black ? scoreBlack - scoreWhite : scoreWhite - scoreBlack;
+    return color == Black ? scoreWhite - scoreBlack : scoreBlack - scoreWhite;
 }

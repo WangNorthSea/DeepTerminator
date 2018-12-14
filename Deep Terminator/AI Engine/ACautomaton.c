@@ -91,4 +91,3 @@ int * recognize(char * pattern, struct node * root, int keycharCount) {
     
     return result;
 }
-

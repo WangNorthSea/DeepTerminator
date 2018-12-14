@@ -27,7 +27,8 @@ int transCoordinateToIndex(char * position) {
 }
 
 char * transIndexToCoordinate(int index) {
-    char * coordinate = (char *)malloc(sizeof(char) * 3);
+    char * coordinate = (char *)malloc(sizeof(char) * 4);
+    coordinate[3] = '\0';
     coordinate[0] = index % 15 + 'a';
     if (15 - index / 15 >= 10) {
         coordinate[1] = '1';

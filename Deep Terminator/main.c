@@ -8,40 +8,44 @@
 
 #include <stdio.h>
 #include <string.h>
+#include "board.h"
 
 extern void init(void);
 extern void put(int index);
 extern void removePiece(void);
 extern int transCoordinateToIndex(char * position);
 
-extern void test(void);
-
-char board[225];
-char * pos;
+extern int evaluate(char * board, int color);
 
 int main(void) {
+    int i;
     char input[10];
+    int score;
     
     init();
+loop:
     while (1) {
         scanf("%s", input);
-        if (!strcmp(input, "calc"))
-            test();//printf("ok\n");
+        if (!strcmp(input, "calc")) {
+            printf("Black score = %d\n", evaluate(board, Black));
+            printf("White score = %d\n", evaluate(board, White));
+        }
         else if (!strcmp(input, "exit"))
-            break;//return 0;
+            goto display;
         else if (!strcmp(input, "remove"))
             removePiece();
         else {
             put(transCoordinateToIndex(input));
         }
     }
-    /*int i;
+display:
     for (i = 0; i < 225; i++) {
         if (i % 15 == 0) {
             printf("\n");
         }
         printf("%d", board[i]);
     }
-    printf("\n");*/
+    printf("\n");
+    goto loop;
     return 0;
 }

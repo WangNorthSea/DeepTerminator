@@ -9,8 +9,6 @@
 #include <stdlib.h>
 #include "board.h"
 
-extern char board[225];
-extern char * pos;
 extern char * append(char * array, int value);
 extern int count(char * array);
 

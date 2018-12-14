@@ -13,6 +13,7 @@
 		3098805E21C20184005CA395 /* ChangeBoard.c in Sources */ = {isa = PBXBuildFile; fileRef = 3098805D21C20184005CA395 /* ChangeBoard.c */; };
 		3098806021C202D1005CA395 /* Initialize.c in Sources */ = {isa = PBXBuildFile; fileRef = 3098805F21C202D1005CA395 /* Initialize.c */; };
 		3098806321C206ED005CA395 /* Trans.c in Sources */ = {isa = PBXBuildFile; fileRef = 3098806221C206ED005CA395 /* Trans.c */; };
+		30A7067C21C39C150078CBC6 /* Evaluate.c in Sources */ = {isa = PBXBuildFile; fileRef = 30A7067B21C39C150078CBC6 /* Evaluate.c */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -36,6 +37,8 @@
 		3098805F21C202D1005CA395 /* Initialize.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = Initialize.c; sourceTree = "<group>"; };
 		3098806121C2032D005CA395 /* board.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = board.h; sourceTree = "<group>"; };
 		3098806221C206ED005CA395 /* Trans.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = Trans.c; sourceTree = "<group>"; };
+		30A7067A21C39A560078CBC6 /* ACautomaton.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ACautomaton.h; sourceTree = "<group>"; };
+		30A7067B21C39C150078CBC6 /* Evaluate.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = Evaluate.c; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -88,9 +91,11 @@
 			isa = PBXGroup;
 			children = (
 				3098806121C2032D005CA395 /* board.h */,
+				30A7067A21C39A560078CBC6 /* ACautomaton.h */,
 				3098805B21C1F93B005CA395 /* ArrayOp.c */,
 				3098805F21C202D1005CA395 /* Initialize.c */,
 				300F18D821C256A500E84144 /* ACautomaton.c */,
+				30A7067B21C39C150078CBC6 /* Evaluate.c */,
 			);
 			path = "AI Engine";
 			sourceTree = "<group>";
@@ -153,6 +158,7 @@
 			files = (
 				3098805C21C1F93B005CA395 /* ArrayOp.c in Sources */,
 				307F153521C1E18800324B07 /* main.c in Sources */,
+				30A7067C21C39C150078CBC6 /* Evaluate.c in Sources */,
 				300F18D921C256A500E84144 /* ACautomaton.c in Sources */,
 				3098805E21C20184005CA395 /* ChangeBoard.c in Sources */,
 				3098806321C206ED005CA395 /* Trans.c in Sources */,

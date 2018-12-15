@@ -17,6 +17,8 @@
 int evaNodes = 0;
 
 extern int cut;
+extern char board[225];
+extern int * pos;
 
 extern void init(void);
 extern void put(int index);
@@ -26,9 +28,11 @@ extern int transCoordinateToIndex(char * position);
 extern char * transIndexToCoordinate(int index);
 
 extern int search(char * board, int color);
+extern int checkWhoWin(char * board);
 
 int main(void) {
     //int i;
+    int whoWin = 0;
     int decidedIndex;
     char input[10];
     
@@ -58,8 +62,14 @@ int main(void) {
             break;
         else if (!strcmp(input, "remove"))
             removePiece();
-        else
+        else {
             put(transCoordinateToIndex(input));
+            whoWin = checkWhoWin(board);
+            if (whoWin == Black)
+                printf("Black wins!\n");
+            else if (whoWin == White)
+                printf("White wins!\n");
+        }
     }
     /*for (i = 0; i < 225; i++) {
         if (i % 15 == 0) {

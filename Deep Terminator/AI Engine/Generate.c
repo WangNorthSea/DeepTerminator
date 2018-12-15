@@ -7,19 +7,12 @@
 //
 
 #include <stdlib.h>
-#include <memory.h>
 #include "board.h"
 #include "settings.h"
-#include "ACautomaton.h"
 
 extern int intCount(int * array);
-extern int getScore(int * result);
 extern int * append(int * array, int value);
-extern int * recognize(char * pattern, struct node * root, int keycharCount);
-
-extern int patternScore[18];
-extern struct node * rootBlack;
-extern struct node * rootWhite;
+extern int evaluate(char * board, int color);
 
 int min(int a, int b) { return (a - b <= 0) ? a : b; }
 
@@ -240,7 +233,7 @@ int * findSpace(char * board) {
     return indexArray;
 }
 
-int evaluateSpace(char * board, int index, int color) {
+/*int evaluateSpace(char * board, int index, int color) {
     int i, j;
     char * evaBoard = (char *)malloc(sizeof(char) * 225);
     int scoreBlack = 0, scoreWhite = 0;
@@ -351,7 +344,7 @@ int evaluateSpace(char * board, int index, int color) {
     free(resultWhite);
     free(tempBoardStr);
     return color == Black ? scoreBlack - scoreWhite : scoreWhite - scoreBlack;
-}
+}*/
 
 void quickSort(int * Array, int len, int * indexArray, int descend) {
     int i = 0, j = (len - 1);
@@ -432,16 +425,24 @@ int * generateCAND(char * board, int color) {
     int * indexArray = findSpace(board);
     int indexCount = intCount(indexArray);
     int * scoreArray = (int *)malloc(sizeof(int) * indexCount);
+    char * evaBoard = (char *)malloc(225);
     
-    for (i = 0; i < indexCount; i++)
-        scoreArray[i] = evaluateSpace(board, indexArray[i], color);
-    quickSort(scoreArray, indexCount, indexArray, 1);\
+    for (i = 0; i < 225; i++)
+        evaBoard[i] = board[i];
+    
+    for (i = 0; i < indexCount; i++) {
+        evaBoard[indexArray[i]] = color;
+        scoreArray[i] = evaluate(evaBoard, color);
+        evaBoard[indexArray[i]] = Empty;
+    }
+    quickSort(scoreArray, indexCount, indexArray, 1);
     
     if (intCount(indexArray) > ChildNodes) {
         indexArray = (int *)realloc(indexArray, sizeof(int) * (ChildNodes + 1));
         indexArray[ChildNodes] = -1;
     }
     
+    free(evaBoard);
     free(scoreArray);
     return indexArray;
 }

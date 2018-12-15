@@ -15,23 +15,24 @@ int cut = 0;
 extern int evaNodes;
 
 int intCount(int * array);
-extern int evaluate(char * board, int color, int nextColor);
+extern int evaluate(char * board, int color);
+extern int checkWhoWin(char * board);
 extern int * generateCAND(char * board, int color);
 
 extern char * transIndexToCoordinate(int index);
-
 
 int alphaBeta(char * board, int depth, int alpha, int beta, int color) {
     if (depth == 0) {
         evaNodes++;
         if (color == Black)
-            return evaluate(board, White, Black);
+            return evaluate(board, White);
         else
-            return evaluate(board, Black, White);
+            return evaluate(board, Black);
     }
     
     int i;
     int score;
+    int whoWin = 0;
     int decidedIndex = 0;
     int * indexArray = generateCAND(board, color);
     int indexCount = intCount(indexArray);
@@ -39,10 +40,21 @@ int alphaBeta(char * board, int depth, int alpha, int beta, int color) {
     for (i = 0; i < indexCount; i++) {
         board[indexArray[i]] = color;
         
+        whoWin = checkWhoWin(board);
+        
+        if (whoWin) {
+            if (whoWin == color)
+                score = 10000;
+            else
+                score = -10000;
+            goto someoneWin;
+        }
+        
         if (color == Black)
             score = -alphaBeta(board, depth - 1, -beta, -alpha, White);
         else
             score = -alphaBeta(board, depth - 1, -beta, -alpha, Black);
+    someoneWin:
         
         board[indexArray[i]] = Empty;
         

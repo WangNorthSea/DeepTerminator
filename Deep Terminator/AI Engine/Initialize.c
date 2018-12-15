@@ -15,6 +15,11 @@ extern void buildFailPtr(struct node * root);
 
 struct node * rootBlack;
 struct node * rootWhite;
+struct node * rootBlackWin;
+struct node * rootWhiteWin;
+
+char board[225];
+int * pos;
 
 char blackPatterns[18][10] = {
     {Black, Black, Black, Black, Black, Stop},           //Consecutive Five
@@ -58,27 +63,40 @@ char whitePatterns[18][10] = {
     {Empty, White, Empty, Empty, White, Empty, Stop}
 };
 
+char blackWin[10] = {Black, Black, Black, Black, Black, Stop};
+char whiteWin[10] = {White, White, White, White, White, Stop};
+
+void initRoot(struct node * root) {
+    root -> next[0] = NULL;
+    root -> next[1] = NULL;
+    root -> next[2] = NULL;
+    root -> fail = NULL;
+    root -> id = -1;
+}
+
 void initACautomaton(void) {
     int i;
     rootBlack = (struct node *)malloc(sizeof(struct node));
     rootWhite = (struct node *)malloc(sizeof(struct node));
-    rootBlack -> next[0] = NULL;
-    rootBlack -> next[1] = NULL;
-    rootBlack -> next[2] = NULL;
-    rootBlack -> fail = NULL;
-    rootBlack -> id = -1;
-    rootWhite -> next[0] = NULL;
-    rootWhite -> next[1] = NULL;
-    rootWhite -> next[2] = NULL;
-    rootWhite -> fail = NULL;
-    rootWhite -> id = -1;
+    rootBlackWin = (struct node *)malloc(sizeof(struct node));
+    rootWhiteWin = (struct node *)malloc(sizeof(struct node));
+    
+    initRoot(rootBlack);
+    initRoot(rootWhite);
+    initRoot(rootBlackWin);
+    initRoot(rootWhiteWin);
     
     for (i = 0; i < 18; i++)
         insert(blackPatterns[i], rootBlack, i);
     for (i = 0; i < 18; i++)
         insert(whitePatterns[i], rootWhite, i);
+    insert(blackWin, rootBlackWin, 0);
+    insert(whiteWin, rootWhiteWin, 0);
+    
     buildFailPtr(rootBlack);
     buildFailPtr(rootWhite);
+    buildFailPtr(rootBlackWin);
+    buildFailPtr(rootWhiteWin);
 }
 
 void init(void) {

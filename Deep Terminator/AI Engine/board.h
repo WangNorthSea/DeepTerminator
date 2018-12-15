@@ -14,7 +14,4 @@
 #define White 2
 #define Stop -1
 
-char board[225];
-int * pos;
-
 #endif /* board_h */

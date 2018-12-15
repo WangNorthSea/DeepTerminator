@@ -29,3 +29,11 @@ void removePiece(void) {
     pos[piececharCount - 1] = -1;
     pos = (int *)realloc(pos, sizeof(int) * piececharCount);
 }
+
+void removeAllPieces(void) {
+    int i;
+    pos = (int *)realloc(pos, sizeof(int));
+    pos[0] = -1;
+    for (i = 0; i < 225; i++)
+        board[i] = Empty;
+}

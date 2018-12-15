@@ -38,6 +38,8 @@ int checkWhoWin(char * board) {
         free(tempResultWhite);
         free(tempBoardStr[0][i]);
     }
+    for (i = 15; i < 29; i++)
+        free(tempBoardStr[0][i]);
     free(tempBoardStr[0]);
     
     //纵向
@@ -52,6 +54,8 @@ int checkWhoWin(char * board) {
         free(tempResultWhite);
         free(tempBoardStr[1][i]);
     }
+    for (i = 15; i < 29; i++)
+        free(tempBoardStr[1][i]);
     free(tempBoardStr[1]);
     
     //左上到右下

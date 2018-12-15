@@ -9,6 +9,7 @@
 #include <stdio.h>
 #include <string.h>
 #include "board.h"
+#include "settings.h"
 
 int evaNodes = 0;
 
@@ -26,6 +27,8 @@ extern char * transIndexToCoordinate(int index);
 
 extern int search(char * board, int color);
 extern int checkWhoWin(char * board);
+extern int checkForbidMove(char * board);
+extern int checkRenjuWhoWin(char * board);
 
 int main(void) {
     int whoWin = 0;
@@ -43,23 +46,32 @@ int main(void) {
                 decidedIndex = search(board, Black);
             put(decidedIndex);
             
-            if (intCount(pos) % 2 == 0)
-                printf("White: %s\n", transIndexToCoordinate(decidedIndex));
-            else
-                printf("Black: %s\n", transIndexToCoordinate(decidedIndex));
             printf("evaluated nodes = %d\n", evaNodes);
             printf("alphaBeta cut = %d\n", cut);
             evaNodes = 0;
             cut = 0;
             
-            whoWin = checkWhoWin(board);
-            if (whoWin == Black) {
-                printf("Black wins!\n");
-                removeAllPieces();
+            if (Renju) {
+                whoWin = checkRenjuWhoWin(board);
+                if (whoWin == Black) {
+                    printf("Black wins!\n");
+                    removeAllPieces();
+                }
+                else if (whoWin == White) {
+                    printf("White wins!\n");
+                    removeAllPieces();
+                }
             }
-            else if (whoWin == White) {
-                printf("White wins!\n");
-                removeAllPieces();
+            else {
+                whoWin = checkWhoWin(board);
+                if (whoWin == Black) {
+                    printf("Black wins!\n");
+                    removeAllPieces();
+                }
+                else if (whoWin == White) {
+                    printf("White wins!\n");
+                    removeAllPieces();
+                }
             }
         }
         else if (!strcmp(input, "exit"))
@@ -68,14 +80,32 @@ int main(void) {
             removePiece();
         else {
             put(transCoordinateToIndex(input));
-            whoWin = checkWhoWin(board);
-            if (whoWin == Black) {
-                printf("Black wins!\n");
-                removeAllPieces();
+            
+            if (Renju) {
+                if (checkForbidMove(board))
+                    printf("White wins! Black has made a forbidden move!\n");
+                else {
+                    whoWin = checkRenjuWhoWin(board);
+                    if (whoWin == Black) {
+                        printf("Black wins!\n");
+                        removeAllPieces();
+                    }
+                    else if (whoWin == White) {
+                        printf("White wins!\n");
+                        removeAllPieces();
+                    }
+                }
             }
-            else if (whoWin == White) {
-                printf("White wins!\n");
-                removeAllPieces();
+            else {
+                whoWin = checkWhoWin(board);
+                if (whoWin == Black) {
+                    printf("Black wins!\n");
+                    removeAllPieces();
+                }
+                else if (whoWin == White) {
+                    printf("White wins!\n");
+                    removeAllPieces();
+                }
             }
         }
     }

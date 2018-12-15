@@ -243,13 +243,11 @@ int * findSpace(char * board) {
 int evaluateSpace(char * board, int color) {
     int i, j;
     int scoreBlack = 0, scoreWhite = 0;
-    int * resultBlack = (int *)malloc(sizeof(int) * 18);
-    int * resultWhite = (int *)malloc(sizeof(int) * 18);
+    int resultBlack[18] = {0};
+    int resultWhite[18] = {0};
     char *** tempBoardStr = getBoardStr(board);
     int * tempResultBlack;
     int * tempResultWhite;
-    resultBlack = memset(resultBlack, 0, sizeof(int) * 18);
-    resultWhite = memset(resultWhite, 0, sizeof(int) * 18);
     
     //横向
     for (i = 0; i < 15; i++) {
@@ -316,8 +314,6 @@ int evaluateSpace(char * board, int color) {
     scoreBlack = getScore(resultBlack);
     scoreWhite = getScore(resultWhite);
     
-    free(resultBlack);
-    free(resultWhite);
     return color == Black ? scoreBlack - scoreWhite : scoreWhite - scoreBlack;
 }
 
@@ -400,7 +396,7 @@ int * generateCAND(char * board, int color) {
     int * indexArray = findSpace(board);
     int indexCount = intCount(indexArray);
     int * scoreArray = (int *)malloc(sizeof(int) * indexCount);
-    char * evaBoard = (char *)malloc(225);
+    char evaBoard[225];
     
     for (i = 0; i < 225; i++)
         evaBoard[i] = board[i];
@@ -417,7 +413,6 @@ int * generateCAND(char * board, int color) {
         indexArray[ChildNodes] = -1;
     }
     
-    free(evaBoard);
     free(scoreArray);
     return indexArray;
 }

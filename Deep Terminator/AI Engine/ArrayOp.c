@@ -28,7 +28,7 @@ int * append(int * array, int value) {
     return array;
 }
 
-char * concat(char * first, char * second) {
+/*char * concat(char * first, char * second) {
     int i;
     if (!charCount(first)) {
         char * new = (char *)malloc(sizeof(int) * (charCount(second) + 1));
@@ -57,4 +57,4 @@ char * concat(char * first, char * second) {
     }
     new[limit] = -1;
     return new;
-}
+}*/

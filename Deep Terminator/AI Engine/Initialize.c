@@ -8,6 +8,7 @@
 
 #include <stdlib.h>
 #include "board.h"
+#include "settings.h"
 #include "ACautomaton.h"
 
 extern void insert(char * str, struct node * root, int id);
@@ -17,6 +18,8 @@ struct node * rootBlack;
 struct node * rootWhite;
 struct node * rootBlackWin;
 struct node * rootWhiteWin;
+struct node * rootBlackRenjuWin;
+struct node * rootForbidMove;
 
 char board[225];
 int * pos;
@@ -66,6 +69,25 @@ char whitePatterns[18][10] = {
 char blackWin[10] = {Black, Black, Black, Black, Black, Stop};
 char whiteWin[10] = {White, White, White, White, White, Stop};
 
+char blackRenjuWin[4][10] = {
+    {Empty, Black, Black, Black, Black, Black, Empty, Stop},
+    {White, Black, Black, Black, Black, Black, Empty, Stop},
+    {Empty, Black, Black, Black, Black, Black, White, Stop},
+    {White, Black, Black, Black, Black, Black, White, Stop}
+};
+
+char forbidPatterns[9][10] = {
+    {Black, Black, Black, Black, Black, Black, Stop},    //Consecutive Six
+    {Empty, Black, Black, Black, Black, Empty, Stop},    //Live Four
+    {Black, Black, Black, Empty, Black, Stop},           //Rush Four
+    {Black, Empty, Black, Black, Black, Stop},
+    {Empty, Black, Black, Black, Black, White, Stop},
+    {White, Black, Black, Black, Black, Empty, Stop},
+    {Empty, Black, Black, Black, Empty, Stop},           //Live Three
+    {Empty, Black, Black, Empty, Black, Empty, Stop},
+    {Empty, Black, Empty, Black, Black, Empty, Stop},
+};
+
 void initRoot(struct node * root) {
     root -> next[0] = NULL;
     root -> next[1] = NULL;
@@ -80,6 +102,21 @@ void initACautomaton(void) {
     rootWhite = (struct node *)malloc(sizeof(struct node));
     rootBlackWin = (struct node *)malloc(sizeof(struct node));
     rootWhiteWin = (struct node *)malloc(sizeof(struct node));
+    
+    if (Renju) {
+        rootBlackRenjuWin = (struct node *)malloc(sizeof(struct node));
+        rootForbidMove = (struct node *)malloc(sizeof(struct node));
+        initRoot(rootBlackRenjuWin);
+        initRoot(rootForbidMove);
+        
+        for (i = 0; i < 4; i++)
+            insert(blackRenjuWin[i], rootBlackRenjuWin, i);
+        for (i = 0; i < 9; i++)
+            insert(forbidPatterns[i], rootForbidMove, i);
+        
+        buildFailPtr(rootBlackRenjuWin);
+        buildFailPtr(rootForbidMove);
+    }
     
     initRoot(rootBlack);
     initRoot(rootWhite);

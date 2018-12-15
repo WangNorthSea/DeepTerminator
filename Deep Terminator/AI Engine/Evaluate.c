@@ -18,10 +18,10 @@ extern int * recognize(char * pattern, struct node * root, int keyCount);
 int patternScore[18] = {
     10000,                       //Consecutive Five
     500,                         //Live Four
-    100, 100, 100, 100,          //Rush Four
-    80, 80, 80,                  //Live Three
-    40, 40, 40, 40, 40, 40,      //Sleep Three
-    10, 10, 10                   //Live Two
+    85, 85, 85, 85,          //Rush Four
+    95, 95, 95,                  //Live Three
+    35, 35, 35, 35, 35, 35,      //Sleep Three
+    5, 5, 5                   //Live Two
 };
 
 int getScore(int * result) {
@@ -92,13 +92,11 @@ char *** getBoardStr(char * board) {
 int evaluate(char * board, int color) {
     int i, j;
     int scoreBlack = 0, scoreWhite = 0;
-    int * resultBlack = (int *)malloc(sizeof(int) * 18);
-    int * resultWhite = (int *)malloc(sizeof(int) * 18);
+    int resultBlack[18] = {0};
+    int resultWhite[18] = {0};
     char *** tempBoardStr = getBoardStr(board);
     int * tempResultBlack;
     int * tempResultWhite;
-    resultBlack = memset(resultBlack, 0, sizeof(int) * 18);
-    resultWhite = memset(resultWhite, 0, sizeof(int) * 18);
     
     //横向
     for (i = 0; i < 15; i++) {
@@ -191,7 +189,5 @@ int evaluate(char * board, int color) {
     scoreBlack = getScore(resultBlack);
     scoreWhite = getScore(resultWhite);
     
-    free(resultBlack);
-    free(resultWhite);
     return color == Black ? scoreBlack - scoreWhite : scoreWhite - scoreBlack;
 }

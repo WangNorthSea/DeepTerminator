@@ -7,12 +7,19 @@
 //
 
 #include <stdlib.h>
+#include <memory.h>
 #include "board.h"
 #include "settings.h"
+#include "ACautomaton.h"
+
+struct node * rootBlack;
+struct node * rootWhite;
 
 extern int intCount(int * array);
 extern int * append(int * array, int value);
-extern int evaluate(char * board, int color);
+int getScore(int * result);
+char *** getBoardStr(char * board);
+extern int * recognize(char * pattern, struct node * root, int keycharCount);
 
 int min(int a, int b) { return (a - b <= 0) ? a : b; }
 
@@ -233,118 +240,82 @@ int * findSpace(char * board) {
     return indexArray;
 }
 
-/*int evaluateSpace(char * board, int index, int color) {
+int evaluateSpace(char * board, int color) {
     int i, j;
-    char * evaBoard = (char *)malloc(sizeof(char) * 225);
     int scoreBlack = 0, scoreWhite = 0;
     int * resultBlack = (int *)malloc(sizeof(int) * 18);
     int * resultWhite = (int *)malloc(sizeof(int) * 18);
-    char * tempBoardStr = (char *)malloc(16);
+    char *** tempBoardStr = getBoardStr(board);
     int * tempResultBlack;
     int * tempResultWhite;
-    
-    for (i = 0; i < 225; i++)
-        evaBoard[i] = board[i];
-    evaBoard[index] = color;
     resultBlack = memset(resultBlack, 0, sizeof(int) * 18);
     resultWhite = memset(resultWhite, 0, sizeof(int) * 18);
-    tempBoardStr[15] = -1;
     
     //横向
     for (i = 0; i < 15; i++) {
-        for (j = 0; j < 15; j++)
-            tempBoardStr[j] = evaBoard[i * 15 + j];
-        tempResultBlack = recognize(tempBoardStr, rootBlack, 18);
-        tempResultWhite = recognize(tempBoardStr, rootWhite, 18);
+        tempResultBlack = recognize(tempBoardStr[0][i], rootBlack, 18);
+        tempResultWhite = recognize(tempBoardStr[0][i], rootWhite, 18);
         for (j = 0; j < 18; j++) {
             resultBlack[j] += tempResultBlack[j];
             resultWhite[j] += tempResultWhite[j];
         }
         free(tempResultBlack);
         free(tempResultWhite);
+        free(tempBoardStr[0][i]);
     }
+    free(tempBoardStr[0]);
     
     //纵向
     for (i = 0; i < 15; i++) {
-        for (j = 0; j < 15; j++)
-            tempBoardStr[j] = evaBoard[i + j * 15];
-        tempResultBlack = recognize(tempBoardStr, rootBlack, 18);
-        tempResultWhite = recognize(tempBoardStr, rootWhite, 18);
+        tempResultBlack = recognize(tempBoardStr[1][i], rootBlack, 18);
+        tempResultWhite = recognize(tempBoardStr[1][i], rootWhite, 18);
         for (j = 0; j < 18; j++) {
             resultBlack[j] += tempResultBlack[j];
             resultWhite[j] += tempResultWhite[j];
         }
         free(tempResultBlack);
         free(tempResultWhite);
+        free(tempBoardStr[1][i]);
     }
+    free(tempBoardStr[1]);
     
     //左上到右下
-    for (i = 0; i < 15; i++) {
-        for (j = 0; j <= i; j++)
-            tempBoardStr[j] = evaBoard[14 - i + j * 16];
-        if (i < 14)
-            tempBoardStr[j] = -1;
-        tempResultBlack = recognize(tempBoardStr, rootBlack, 18);
-        tempResultWhite = recognize(tempBoardStr, rootWhite, 18);
+    for (i = 0; i < 29; i++) {
+        tempResultBlack = recognize(tempBoardStr[2][i], rootBlack, 18);
+        tempResultWhite = recognize(tempBoardStr[2][i], rootWhite, 18);
         for (j = 0; j < 18; j++) {
             resultBlack[j] += tempResultBlack[j];
             resultWhite[j] += tempResultWhite[j];
         }
         free(tempResultBlack);
         free(tempResultWhite);
-    }//右半部分
-    for (i = 1; i < 15; i++) {
-        for (j = 0; j <= 14 - i; j++)
-            tempBoardStr[j] = evaBoard[i * 15 + j * 16];
-        tempBoardStr[j] = -1;
-        tempResultBlack = recognize(tempBoardStr, rootBlack, 18);
-        tempResultWhite = recognize(tempBoardStr, rootWhite, 18);
-        for (j = 0; j < 18; j++) {
-            resultBlack[j] += tempResultBlack[j];
-            resultWhite[j] += tempResultWhite[j];
-        }
-        free(tempResultBlack);
-        free(tempResultWhite);
-    }//左半部分
+        free(tempBoardStr[2][i]);
+    }
+    free(tempBoardStr[2]);
     
     //右上到左下
-    for (i = 0; i < 15; i++) {
-        for (j = 0; j <= i; j++)
-            tempBoardStr[j] = evaBoard[i + j * 14];
-        if (i < 14)
-            tempBoardStr[j] = -1;
-        tempResultBlack = recognize(tempBoardStr, rootBlack, 18);
-        tempResultWhite = recognize(tempBoardStr, rootWhite, 18);
+    for (i = 0; i < 29; i++) {
+        tempResultBlack = recognize(tempBoardStr[3][i], rootBlack, 18);
+        tempResultWhite = recognize(tempBoardStr[3][i], rootWhite, 18);
         for (j = 0; j < 18; j++) {
             resultBlack[j] += tempResultBlack[j];
             resultWhite[j] += tempResultWhite[j];
         }
         free(tempResultBlack);
         free(tempResultWhite);
-    }//左半部分
-    for (i = 1; i < 15; i++) {
-        for (j = 0; j <= 14 - i; j++)
-            tempBoardStr[j] = evaBoard[14 + i * 15 + j * 14];
-        tempBoardStr[j] = -1;
-        tempResultBlack = recognize(tempBoardStr, rootBlack, 18);
-        tempResultWhite = recognize(tempBoardStr, rootWhite, 18);
-        for (j = 0; j < 18; j++) {
-            resultBlack[j] += tempResultBlack[j];
-            resultWhite[j] += tempResultWhite[j];
-        }
-        free(tempResultBlack);
-        free(tempResultWhite);
-    }//右半部分
+        free(tempBoardStr[3][i]);
+    }
+    free(tempBoardStr[3]);
+    
+    free(tempBoardStr);
     
     scoreBlack = getScore(resultBlack);
     scoreWhite = getScore(resultWhite);
     
-    free(evaBoard);
     free(resultBlack);
     free(resultWhite);
-    free(tempBoardStr);
     return color == Black ? scoreBlack - scoreWhite : scoreWhite - scoreBlack;
-}*/
+}
 
 void quickSort(int * Array, int len, int * indexArray, int descend) {
     int i = 0, j = (len - 1);
@@ -432,7 +403,7 @@ int * generateCAND(char * board, int color) {
     
     for (i = 0; i < indexCount; i++) {
         evaBoard[indexArray[i]] = color;
-        scoreArray[i] = evaluate(evaBoard, color);
+        scoreArray[i] = evaluateSpace(evaBoard, color);
         evaBoard[indexArray[i]] = Empty;
     }
     quickSort(scoreArray, indexCount, indexArray, 1);

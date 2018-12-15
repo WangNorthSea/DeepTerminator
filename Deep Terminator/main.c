@@ -6,10 +6,6 @@
 //  Copyright © 2018 UCAS Developers. All rights reserved.
 //
 
-
-//问题：分数区别很小、alphaBeta没有胜利截断（应该也是产生前者的原因）、落点生成还欠考虑
-
-
 #include <stdio.h>
 #include <string.h>
 #include "board.h"

@@ -54,6 +54,9 @@ int alphaBeta(char * board, int depth, int alpha, int beta, int color) {
             score = -alphaBeta(board, depth - 1, -beta, -alpha, White);
         else
             score = -alphaBeta(board, depth - 1, -beta, -alpha, Black);
+        if (depth == 1)
+            score = -score;
+        
     someoneWin:
         
         board[indexArray[i]] = Empty;
@@ -64,6 +67,7 @@ int alphaBeta(char * board, int depth, int alpha, int beta, int color) {
         
         if (score >= beta) {
             cut++;
+            free(indexArray);
             return beta;
         }
         if (score > alpha) {
@@ -75,6 +79,7 @@ int alphaBeta(char * board, int depth, int alpha, int beta, int color) {
     
     if (depth == Depth)
         board[decidedIndex] = color;
+    free(indexArray);
     return alpha;
 }
 

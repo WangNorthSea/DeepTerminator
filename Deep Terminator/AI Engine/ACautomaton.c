@@ -66,6 +66,7 @@ void buildFailPtr(struct node * root) {
     }
 }
 
+//字符串匹配
 int * recognize(char * pattern, struct node * root, int keycharCount) {
     struct node * p = root;
     int i;

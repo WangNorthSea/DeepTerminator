@@ -24,13 +24,14 @@ struct node * rootForbidMove;
 char board[225];
 int * pos;
 
-char blackPatterns[18][10] = {
+char blackPatterns[19][10] = {
     {Black, Black, Black, Black, Black, Stop},           //Consecutive Five
     {Empty, Black, Black, Black, Black, Empty, Stop},        //Live Four
     {Black, Black, Black, Empty, Black, Stop},           //Rush Four
     {Black, Empty, Black, Black, Black, Stop},
     {Empty, Black, Black, Black, Black, White, Stop},
     {White, Black, Black, Black, Black, Empty, Stop},
+    {Black, Black, Empty, Black, Black, Stop},
     {Empty, Black, Black, Black, Empty, Stop},           //Live Three
     {Empty, Black, Black, Empty, Black, Empty, Stop},
     {Empty, Black, Empty, Black, Black, Empty, Stop},
@@ -45,13 +46,14 @@ char blackPatterns[18][10] = {
     {Empty, Black, Empty, Empty, Black, Empty, Stop}
 };
 
-char whitePatterns[18][10] = {
+char whitePatterns[19][10] = {
     {White, White, White, White, White, Stop},
     {Empty, White, White, White, White, Empty, Stop},
     {White, White, White, Empty, White, Stop},
     {White, Empty, White, White, White, Stop},
     {Empty, White, White, White, White, Black, Stop},
     {Black, White, White, White, White, Empty, Stop},
+    {White, White, Empty, White, White, Stop},
     {Empty, White, White, White, Empty, Stop},
     {Empty, White, White, Empty, White, Empty, Stop},
     {Empty, White, Empty, White, White, Empty, Stop},
@@ -123,9 +125,9 @@ void initACautomaton(void) {
     initRoot(rootBlackWin);
     initRoot(rootWhiteWin);
     
-    for (i = 0; i < 18; i++)
+    for (i = 0; i < 19; i++)
         insert(blackPatterns[i], rootBlack, i);
-    for (i = 0; i < 18; i++)
+    for (i = 0; i < 19; i++)
         insert(whitePatterns[i], rootWhite, i);
     insert(blackWin, rootBlackWin, 0);
     insert(whiteWin, rootWhiteWin, 0);

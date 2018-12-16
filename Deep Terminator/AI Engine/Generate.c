@@ -15,6 +15,8 @@
 struct node * rootBlack;
 struct node * rootWhite;
 
+extern int historyTable[225];
+
 extern int intCount(int * array);
 extern int * append(int * array, int value);
 int getScore(int * result);
@@ -243,17 +245,17 @@ int * findSpace(char * board) {
 int evaluateSpace(char * board, int color) {
     int i, j;
     int scoreBlack = 0, scoreWhite = 0;
-    int resultBlack[18] = {0};
-    int resultWhite[18] = {0};
+    int resultBlack[19] = {0};
+    int resultWhite[19] = {0};
     char *** tempBoardStr = getBoardStr(board);
     int * tempResultBlack;
     int * tempResultWhite;
     
     //横向
     for (i = 0; i < 15; i++) {
-        tempResultBlack = recognize(tempBoardStr[0][i], rootBlack, 18);
-        tempResultWhite = recognize(tempBoardStr[0][i], rootWhite, 18);
-        for (j = 0; j < 18; j++) {
+        tempResultBlack = recognize(tempBoardStr[0][i], rootBlack, 19);
+        tempResultWhite = recognize(tempBoardStr[0][i], rootWhite, 19);
+        for (j = 0; j < 19; j++) {
             resultBlack[j] += tempResultBlack[j];
             resultWhite[j] += tempResultWhite[j];
         }
@@ -267,9 +269,9 @@ int evaluateSpace(char * board, int color) {
     
     //纵向
     for (i = 0; i < 15; i++) {
-        tempResultBlack = recognize(tempBoardStr[1][i], rootBlack, 18);
-        tempResultWhite = recognize(tempBoardStr[1][i], rootWhite, 18);
-        for (j = 0; j < 18; j++) {
+        tempResultBlack = recognize(tempBoardStr[1][i], rootBlack, 19);
+        tempResultWhite = recognize(tempBoardStr[1][i], rootWhite, 19);
+        for (j = 0; j < 19; j++) {
             resultBlack[j] += tempResultBlack[j];
             resultWhite[j] += tempResultWhite[j];
         }
@@ -283,9 +285,9 @@ int evaluateSpace(char * board, int color) {
     
     //左上到右下
     for (i = 0; i < 29; i++) {
-        tempResultBlack = recognize(tempBoardStr[2][i], rootBlack, 18);
-        tempResultWhite = recognize(tempBoardStr[2][i], rootWhite, 18);
-        for (j = 0; j < 18; j++) {
+        tempResultBlack = recognize(tempBoardStr[2][i], rootBlack, 19);
+        tempResultWhite = recognize(tempBoardStr[2][i], rootWhite, 19);
+        for (j = 0; j < 19; j++) {
             resultBlack[j] += tempResultBlack[j];
             resultWhite[j] += tempResultWhite[j];
         }
@@ -297,9 +299,9 @@ int evaluateSpace(char * board, int color) {
     
     //右上到左下
     for (i = 0; i < 29; i++) {
-        tempResultBlack = recognize(tempBoardStr[3][i], rootBlack, 18);
-        tempResultWhite = recognize(tempBoardStr[3][i], rootWhite, 18);
-        for (j = 0; j < 18; j++) {
+        tempResultBlack = recognize(tempBoardStr[3][i], rootBlack, 19);
+        tempResultWhite = recognize(tempBoardStr[3][i], rootWhite, 19);
+        for (j = 0; j < 19; j++) {
             resultBlack[j] += tempResultBlack[j];
             resultWhite[j] += tempResultWhite[j];
         }
@@ -391,12 +393,23 @@ void quickSort(int * Array, int len, int * indexArray, int descend) {
     }
 }
 
-int * generateCAND(char * board, int color) {
+int * generateCAND(char * board, int color, int firstSearch) {
     int i;
     int * indexArray = findSpace(board);
-    int indexCount = intCount(indexArray);
-    int * scoreArray = (int *)malloc(sizeof(int) * indexCount);
-    char evaBoard[225];
+    
+    if (EnableHistoryTable && !firstSearch) {
+        int indexCount = intCount(indexArray);
+        int * scoreArray = (int *)malloc(sizeof(int) * indexCount);
+    
+        for (i = 0; i < indexCount; i++)
+            scoreArray[i] = historyTable[indexArray[i]];
+        quickSort(scoreArray, indexCount, indexArray, 1);
+        
+        free(scoreArray);
+    }
+    
+    
+    /*char evaBoard[225];
     
     for (i = 0; i < 225; i++)
         evaBoard[i] = board[i];
@@ -406,14 +419,15 @@ int * generateCAND(char * board, int color) {
         scoreArray[i] = evaluateSpace(evaBoard, color);
         evaBoard[indexArray[i]] = Empty;
     }
-    quickSort(scoreArray, indexCount, indexArray, 1);
+    quickSort(scoreArray, indexCount, indexArray, 1);*/
     
-    if (intCount(indexArray) > ChildNodes) {
-        indexArray = (int *)realloc(indexArray, sizeof(int) * (ChildNodes + 1));
-        indexArray[ChildNodes] = -1;
+    if (!firstSearch) {
+        if (intCount(indexArray) > ChildNodes) {
+            indexArray = (int *)realloc(indexArray, sizeof(int) * (ChildNodes + 1));
+            indexArray[ChildNodes] = -1;
+        }
     }
     
-    free(scoreArray);
     return indexArray;
 }
 

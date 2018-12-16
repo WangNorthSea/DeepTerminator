@@ -34,9 +34,9 @@
 
 /* Begin PBXFileReference section */
 		300F18D821C256A500E84144 /* ACautomaton.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ACautomaton.c; sourceTree = "<group>"; };
-		3034A3B521C5273C00E7B3DE /* Deep Terminator */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; name = "Deep Terminator"; path = "/Users/haoyuwang/Desktop/Deep Terminator/build/Debug/Deep Terminator"; sourceTree = "<absolute>"; };
 		3034A3B621C52A2000E7B3DE /* Renju.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = Renju.c; sourceTree = "<group>"; };
 		307F153421C1E18800324B07 /* main.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
+		3081127F21C5DB7200AD2E26 /* Deep Terminator */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; name = "Deep Terminator"; path = "/Users/haoyuwang/Desktop/Deep Terminator/build/Debug/Deep Terminator"; sourceTree = "<absolute>"; };
 		3098805B21C1F93B005CA395 /* ArrayOp.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ArrayOp.c; sourceTree = "<group>"; };
 		3098805D21C20184005CA395 /* ChangeBoard.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ChangeBoard.c; sourceTree = "<group>"; };
 		3098805F21C202D1005CA395 /* Initialize.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = Initialize.c; sourceTree = "<group>"; };
@@ -122,7 +122,7 @@
 			);
 			name = "Deep Terminator";
 			productName = "Deep Terminator";
-			productReference = 3034A3B521C5273C00E7B3DE /* Deep Terminator */;
+			productReference = 3081127F21C5DB7200AD2E26 /* Deep Terminator */;
 			productType = "com.apple.product-type.tool";
 		};
 /* End PBXNativeTarget section */

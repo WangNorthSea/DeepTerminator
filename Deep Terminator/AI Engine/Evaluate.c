@@ -15,10 +15,10 @@ extern struct node * rootBlack;
 extern struct node * rootWhite;
 extern int * recognize(char * pattern, struct node * root, int keyCount);
 
-int patternScore[18] = {
+int patternScore[19] = {
     10000,                       //Consecutive Five
-    500,                         //Live Four
-    85, 85, 85, 85,          //Rush Four
+    5000,                         //Live Four
+    120, 120, 120, 120, 120,      //Rush Four
     95, 95, 95,                  //Live Three
     35, 35, 35, 35, 35, 35,      //Sleep Three
     5, 5, 5                   //Live Two
@@ -28,7 +28,7 @@ int getScore(int * result) {
     int i;
     int score = 0;
     
-    for (i = 0; i < 18; i++)
+    for (i = 0; i < 19; i++)
         score += result[i] * patternScore[i];
     
     return score;
@@ -92,17 +92,17 @@ char *** getBoardStr(char * board) {
 int evaluate(char * board, int color) {
     int i, j;
     int scoreBlack = 0, scoreWhite = 0;
-    int resultBlack[18] = {0};
-    int resultWhite[18] = {0};
+    int resultBlack[19] = {0};
+    int resultWhite[19] = {0};
     char *** tempBoardStr = getBoardStr(board);
     int * tempResultBlack;
     int * tempResultWhite;
     
     //横向
     for (i = 0; i < 15; i++) {
-        tempResultBlack = recognize(tempBoardStr[0][i], rootBlack, 18);
-        tempResultWhite = recognize(tempBoardStr[0][i], rootWhite, 18);
-        for (j = 0; j < 18; j++) {
+        tempResultBlack = recognize(tempBoardStr[0][i], rootBlack, 19);
+        tempResultWhite = recognize(tempBoardStr[0][i], rootWhite, 19);
+        for (j = 0; j < 19; j++) {
             resultBlack[j] += tempResultBlack[j];
             resultWhite[j] += tempResultWhite[j];
         }
@@ -116,9 +116,9 @@ int evaluate(char * board, int color) {
     
     //纵向
     for (i = 0; i < 15; i++) {
-        tempResultBlack = recognize(tempBoardStr[1][i], rootBlack, 18);
-        tempResultWhite = recognize(tempBoardStr[1][i], rootWhite, 18);
-        for (j = 0; j < 18; j++) {
+        tempResultBlack = recognize(tempBoardStr[1][i], rootBlack, 19);
+        tempResultWhite = recognize(tempBoardStr[1][i], rootWhite, 19);
+        for (j = 0; j < 19; j++) {
             resultBlack[j] += tempResultBlack[j];
             resultWhite[j] += tempResultWhite[j];
         }
@@ -132,9 +132,9 @@ int evaluate(char * board, int color) {
     
     //左上到右下
     for (i = 0; i < 29; i++) {
-        tempResultBlack = recognize(tempBoardStr[2][i], rootBlack, 18);
-        tempResultWhite = recognize(tempBoardStr[2][i], rootWhite, 18);
-        for (j = 0; j < 18; j++) {
+        tempResultBlack = recognize(tempBoardStr[2][i], rootBlack, 19);
+        tempResultWhite = recognize(tempBoardStr[2][i], rootWhite, 19);
+        for (j = 0; j < 19; j++) {
             resultBlack[j] += tempResultBlack[j];
             resultWhite[j] += tempResultWhite[j];
         }
@@ -146,9 +146,9 @@ int evaluate(char * board, int color) {
     
     //右上到左下
     for (i = 0; i < 29; i++) {
-        tempResultBlack = recognize(tempBoardStr[3][i], rootBlack, 18);
-        tempResultWhite = recognize(tempBoardStr[3][i], rootWhite, 18);
-        for (j = 0; j < 18; j++) {
+        tempResultBlack = recognize(tempBoardStr[3][i], rootBlack, 19);
+        tempResultWhite = recognize(tempBoardStr[3][i], rootWhite, 19);
+        for (j = 0; j < 19; j++) {
             resultBlack[j] += tempResultBlack[j];
             resultWhite[j] += tempResultWhite[j];
         }

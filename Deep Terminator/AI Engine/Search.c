@@ -31,7 +31,7 @@ struct bestLine {
 
 int historyTable[225] = {0};
 
-int alphaBeta(char * board, int depth, int alpha, int beta, int color, struct bestLine * bL, int firstSearch) {
+int alphaBeta(char * board, int depth, int alpha, int beta, int color, struct bestLine * bL, int firstSearch, int maxDepth, int firstMove) {
     if (depth == 0) {
         evaNodes++;
         bL -> moves = 0;
@@ -44,7 +44,9 @@ int alphaBeta(char * board, int depth, int alpha, int beta, int color, struct be
     int i;
     int score;
     int whoWin = 0;
+    int bestMove = 0;
     int foundPV = 0;
+    int currentIndex = 0;
     //int decidedIndex = 0;
     struct bestLine bestL;
     bestL.moves = 0;
@@ -57,12 +59,33 @@ int alphaBeta(char * board, int depth, int alpha, int beta, int color, struct be
     int indexCount = intCount(indexArray);
     
     for (i = 0; i < indexCount; i++) {
-        board[indexArray[i]] = color;
+        if (!i) {
+            if (maxDepth > IterationDepth && depth == maxDepth) {
+                board[firstMove] = color;
+                currentIndex = firstMove;
+            }
+            else {
+                board[indexArray[i]] = color;
+                currentIndex = indexArray[i];
+            }
+        }
+        else {
+            if (maxDepth > IterationDepth && depth == maxDepth) {
+                if (indexArray[i]  == firstMove)
+                    continue;
+                board[indexArray[i]] = color;
+                currentIndex = indexArray[i];
+            }
+            else {
+                board[indexArray[i]] = color;
+                currentIndex = indexArray[i];
+            }
+        }
         
         if (Renju) {
             if (color == Black) {
                 if (checkForbidMove(board)) {
-                    board[indexArray[i]] = Empty;
+                    board[currentIndex] = Empty;
                     continue;
                 }
             }
@@ -81,54 +104,55 @@ int alphaBeta(char * board, int depth, int alpha, int beta, int color, struct be
         
         if (foundPV) {
             if (color == Black)
-                score = -alphaBeta(board, depth - 1, -alpha - 1, -alpha, White, &bestL, firstSearch);  //进行PVS
+                score = -alphaBeta(board, depth - 1, -alpha - 1, -alpha, White, &bestL, firstSearch,  maxDepth, firstMove);  //进行PVS
             else
-                score = -alphaBeta(board, depth - 1, -alpha - 1, -alpha, Black, &bestL, firstSearch);
+                score = -alphaBeta(board, depth - 1, -alpha - 1, -alpha, Black, &bestL, firstSearch, maxDepth, firstMove);
             if (depth == 1)
                 score = -score;
             
             if (score > alpha && score < beta) {  //PVS失败
                 if (color == Black)
-                    score = -alphaBeta(board, depth - 1, -beta, -alpha, White, &bestL, firstSearch);
+                    score = -alphaBeta(board, depth - 1, -beta, -alpha, White, &bestL, firstSearch, maxDepth, firstMove);
                 else
-                    score = -alphaBeta(board, depth - 1, -beta, -alpha, Black, &bestL, firstSearch);
+                    score = -alphaBeta(board, depth - 1, -beta, -alpha, Black, &bestL, firstSearch, maxDepth, firstMove);
                 if (depth == 1)
                     score = -score;
             }
         }
         else {
             if (color == Black)
-                score = -alphaBeta(board, depth - 1, -beta, -alpha, White, &bestL, firstSearch);
+                score = -alphaBeta(board, depth - 1, -beta, -alpha, White, &bestL, firstSearch, maxDepth, firstMove);
             else
-                score = -alphaBeta(board, depth - 1, -beta, -alpha, Black, &bestL, firstSearch);
+                score = -alphaBeta(board, depth - 1, -beta, -alpha, Black, &bestL, firstSearch, maxDepth, firstMove);
             if (depth == 1)
                 score = -score;
         }
         
     someoneWin:
         
-        board[indexArray[i]] = Empty;
+        board[currentIndex] = Empty;
         
-        if (depth == Depth)
-            printf("%s = %d\n", transIndexToCoordinate(indexArray[i]), score);
+        if (depth == maxDepth)
+            printf("%s = %d\n", transIndexToCoordinate(currentIndex), score);
         
         if (score >= beta) {
             cut++;
-            historyTable[indexArray[i]] += depth * depth;
+            historyTable[currentIndex] += depth * depth;
             free(indexArray);
             return beta;
         }
         if (score > alpha) {
             alpha = score;
             foundPV = 1;
-            historyTable[indexArray[i]] += depth * depth;
-            bL -> indexes[0] = indexArray[i];
+            bestMove = currentIndex;
+            bL -> indexes[0] = currentIndex;
             memcpy(bL -> indexes + 1, bestL.indexes, sizeof(int) * (bestL.moves));
             bL -> moves = bestL.moves + 1;
             /*if (depth == Depth)
                 decidedIndex = currentIndex;*/
         }
     }
+    historyTable[bestMove] += depth * depth;
     
     /*if (depth == Depth)
         board[decidedIndex] = color;*/
@@ -154,15 +178,15 @@ int search(char * board, int color) {
         boardToSearch[i] = board[i];
     
     initHistoryTable();
-    for (i = IterationDepth; i <= Depth; i += 2) {
+    for (i = IterationDepth; i <= Depth; i++) {
         bL = (struct bestLine *)malloc(sizeof(struct bestLine));
         bL -> moves = 0;
         for (j = 0; j < Depth; j++)
             bL -> indexes[j] = 0;
         if (i == IterationDepth)
-            bestScore = alphaBeta(boardToSearch, i, Alpha, Beta, color, bL, 1);
+            bestScore = alphaBeta(boardToSearch, i, Alpha, Beta, color, bL, 1, i, decidedIndex);
         else
-            bestScore = alphaBeta(boardToSearch, i, Alpha, Beta, color, bL, 0);
+            bestScore = alphaBeta(boardToSearch, i, Alpha, Beta, color, bL, 0, i, decidedIndex);
         for (j = 0; j < Depth; j++)
             bests[j] = bL -> indexes[j];
         

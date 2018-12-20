@@ -7,12 +7,9 @@
 //
 
 #include <stdlib.h>
-#include "ACautomaton.h"
-
-extern struct node * rootForbidMove;
-
-extern char *** getBoardStr(char * board);
-extern int * recognize(char * pattern, struct node * root, int keycharCount);
+#include "AC.h"
+#include "init.h"
+#include "evaluate.h"
 
 int checkForbidMove(char * board) {
     int i, j;

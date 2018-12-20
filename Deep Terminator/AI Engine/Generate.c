@@ -10,18 +10,11 @@
 #include <memory.h>
 #include "board.h"
 #include "settings.h"
-#include "ACautomaton.h"
-
-struct node * rootBlack;
-struct node * rootWhite;
-
-extern int historyTable[225];
-
-extern int intCount(int * array);
-extern int * append(int * array, int value);
-int getScore(int * result);
-char *** getBoardStr(char * board);
-extern int * recognize(char * pattern, struct node * root, int keycharCount);
+#include "AC.h"
+#include "array.h"
+#include "init.h"
+#include "evaluate.h"
+#include "search.h"
 
 int min(int a, int b) { return (a - b <= 0) ? a : b; }
 
@@ -401,8 +394,14 @@ int * generateCAND(char * board, int color, int firstSearch) {
         int indexCount = intCount(indexArray);
         int * scoreArray = (int *)malloc(sizeof(int) * indexCount);
     
-        for (i = 0; i < indexCount; i++)
-            scoreArray[i] = historyTable[indexArray[i]];
+        if (color == Black) {
+            for (i = 0; i < indexCount; i++)
+                scoreArray[i] = historyTable[0][indexArray[i]];
+        }
+        else {
+            for (i = 0; i < indexCount; i++)
+                scoreArray[i] = historyTable[1][indexArray[i]];
+        }
         quickSort(scoreArray, indexCount, indexArray, 1);
         
         free(scoreArray);
@@ -421,7 +420,7 @@ int * generateCAND(char * board, int color, int firstSearch) {
     }
     quickSort(scoreArray, indexCount, indexArray, 1);*/
     
-    if (!firstSearch) {
+    if (!firstSearch && EnableHistoryTable) {
         if (intCount(indexArray) > ChildNodes) {
             indexArray = (int *)realloc(indexArray, sizeof(int) * (ChildNodes + 1));
             indexArray[ChildNodes] = -1;

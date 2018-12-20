@@ -12,6 +12,12 @@
 #define Empty 0
 #define Black 1
 #define White 2
+#define Extra 3
 #define Stop -1
+
+extern char board[225];
+extern int * pos;
+
+extern unsigned int * getPatternCodes(int index);
 
 #endif /* board_h */

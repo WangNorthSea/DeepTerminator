@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		300F18D921C256A500E84144 /* ACautomaton.c in Sources */ = {isa = PBXBuildFile; fileRef = 300F18D821C256A500E84144 /* ACautomaton.c */; };
+		301AC7B021CBE75000741FAE /* board.c in Sources */ = {isa = PBXBuildFile; fileRef = 301AC7AF21CBE75000741FAE /* board.c */; };
+		3023C59321CBDD3A001BCEA9 /* patterns.c in Sources */ = {isa = PBXBuildFile; fileRef = 3023C59221CBDD3A001BCEA9 /* patterns.c */; };
 		3034A3B721C52A2000E7B3DE /* Renju.c in Sources */ = {isa = PBXBuildFile; fileRef = 3034A3B621C52A2000E7B3DE /* Renju.c */; };
 		307F153521C1E18800324B07 /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = 307F153421C1E18800324B07 /* main.c */; };
 		3098805C21C1F93B005CA395 /* ArrayOp.c in Sources */ = {isa = PBXBuildFile; fileRef = 3098805B21C1F93B005CA395 /* ArrayOp.c */; };
@@ -34,15 +36,28 @@
 
 /* Begin PBXFileReference section */
 		300F18D821C256A500E84144 /* ACautomaton.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ACautomaton.c; sourceTree = "<group>"; };
+		301AC7AD21CBE1F000741FAE /* Deep Terminator */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; name = "Deep Terminator"; path = "/Users/haoyuwang/Desktop/Deep Terminator/build/Debug/Deep Terminator"; sourceTree = "<absolute>"; };
+		301AC7AE21CBE72200741FAE /* main.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = main.h; sourceTree = "<group>"; };
+		301AC7AF21CBE75000741FAE /* board.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = board.c; sourceTree = "<group>"; };
+		301AC7B121CBE7B500741FAE /* array.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = array.h; sourceTree = "<group>"; };
+		301AC7B221CBE91F00741FAE /* AC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AC.h; sourceTree = "<group>"; };
+		301AC7B321CBE99900741FAE /* init.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = init.h; sourceTree = "<group>"; };
+		301AC7B421CBEA7C00741FAE /* evaluate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = evaluate.h; sourceTree = "<group>"; };
+		301AC7B521CBEAE100741FAE /* generate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = generate.h; sourceTree = "<group>"; };
+		301AC7B621CBEB0100741FAE /* trans.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = trans.h; sourceTree = "<group>"; };
+		301AC7B721CBEB7200741FAE /* changeBoard.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = changeBoard.h; sourceTree = "<group>"; };
+		301AC7B821CBEC5700741FAE /* renju.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = renju.h; sourceTree = "<group>"; };
+		301AC7B921CBEC7900741FAE /* win.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = win.h; sourceTree = "<group>"; };
+		301AC7BA21CBECB500741FAE /* search.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = search.h; sourceTree = "<group>"; };
+		3023C59121CBDD3A001BCEA9 /* patterns.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = patterns.h; sourceTree = "<group>"; };
+		3023C59221CBDD3A001BCEA9 /* patterns.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = patterns.c; sourceTree = "<group>"; };
 		3034A3B621C52A2000E7B3DE /* Renju.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = Renju.c; sourceTree = "<group>"; };
-		30544D1E21C738F0004FB1A0 /* Deep Terminator */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; name = "Deep Terminator"; path = "/Users/haoyuwang/Desktop/Deep Terminator/build/Debug/Deep Terminator"; sourceTree = "<absolute>"; };
 		307F153421C1E18800324B07 /* main.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
 		3098805B21C1F93B005CA395 /* ArrayOp.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ArrayOp.c; sourceTree = "<group>"; };
 		3098805D21C20184005CA395 /* ChangeBoard.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ChangeBoard.c; sourceTree = "<group>"; };
 		3098805F21C202D1005CA395 /* Initialize.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = Initialize.c; sourceTree = "<group>"; };
 		3098806121C2032D005CA395 /* board.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = board.h; sourceTree = "<group>"; };
 		3098806221C206ED005CA395 /* Trans.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = Trans.c; sourceTree = "<group>"; };
-		30A7067A21C39A560078CBC6 /* ACautomaton.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ACautomaton.h; sourceTree = "<group>"; };
 		30A7067B21C39C150078CBC6 /* Evaluate.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = Evaluate.c; sourceTree = "<group>"; };
 		30CF996A21C4914E00A0EC68 /* CheckWin.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = CheckWin.c; sourceTree = "<group>"; };
 		30EBD05521C3F3FA00A9E6AA /* settings.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = settings.h; sourceTree = "<group>"; };
@@ -72,6 +87,7 @@
 			isa = PBXGroup;
 			children = (
 				307F153421C1E18800324B07 /* main.c */,
+				301AC7AE21CBE72200741FAE /* main.h */,
 				307F153B21C1E1D100324B07 /* IO interface */,
 				307F153C21C1E21700324B07 /* AI Engine */,
 			);
@@ -81,7 +97,9 @@
 		307F153B21C1E1D100324B07 /* IO interface */ = {
 			isa = PBXGroup;
 			children = (
+				301AC7B721CBEB7200741FAE /* changeBoard.h */,
 				3098805D21C20184005CA395 /* ChangeBoard.c */,
+				301AC7B621CBEB0100741FAE /* trans.h */,
 				3098806221C206ED005CA395 /* Trans.c */,
 			);
 			path = "IO interface";
@@ -90,17 +108,27 @@
 		307F153C21C1E21700324B07 /* AI Engine */ = {
 			isa = PBXGroup;
 			children = (
-				3098806121C2032D005CA395 /* board.h */,
-				30A7067A21C39A560078CBC6 /* ACautomaton.h */,
 				30EBD05521C3F3FA00A9E6AA /* settings.h */,
+				3098806121C2032D005CA395 /* board.h */,
+				301AC7AF21CBE75000741FAE /* board.c */,
+				301AC7B121CBE7B500741FAE /* array.h */,
 				3098805B21C1F93B005CA395 /* ArrayOp.c */,
+				301AC7B321CBE99900741FAE /* init.h */,
 				3098805F21C202D1005CA395 /* Initialize.c */,
+				301AC7B221CBE91F00741FAE /* AC.h */,
 				300F18D821C256A500E84144 /* ACautomaton.c */,
+				301AC7B421CBEA7C00741FAE /* evaluate.h */,
 				30A7067B21C39C150078CBC6 /* Evaluate.c */,
+				301AC7B521CBEAE100741FAE /* generate.h */,
 				30EBD05621C3F4AF00A9E6AA /* Generate.c */,
+				301AC7BA21CBECB500741FAE /* search.h */,
 				30EBD05821C3FE1F00A9E6AA /* Search.c */,
+				301AC7B921CBEC7900741FAE /* win.h */,
 				30CF996A21C4914E00A0EC68 /* CheckWin.c */,
+				301AC7B821CBEC5700741FAE /* renju.h */,
 				3034A3B621C52A2000E7B3DE /* Renju.c */,
+				3023C59121CBDD3A001BCEA9 /* patterns.h */,
+				3023C59221CBDD3A001BCEA9 /* patterns.c */,
 			);
 			path = "AI Engine";
 			sourceTree = "<group>";
@@ -122,7 +150,7 @@
 			);
 			name = "Deep Terminator";
 			productName = "Deep Terminator";
-			productReference = 30544D1E21C738F0004FB1A0 /* Deep Terminator */;
+			productReference = 301AC7AD21CBE1F000741FAE /* Deep Terminator */;
 			productType = "com.apple.product-type.tool";
 		};
 /* End PBXNativeTarget section */
@@ -164,11 +192,13 @@
 				3098805C21C1F93B005CA395 /* ArrayOp.c in Sources */,
 				307F153521C1E18800324B07 /* main.c in Sources */,
 				30A7067C21C39C150078CBC6 /* Evaluate.c in Sources */,
+				301AC7B021CBE75000741FAE /* board.c in Sources */,
 				3034A3B721C52A2000E7B3DE /* Renju.c in Sources */,
 				30CF996B21C4914E00A0EC68 /* CheckWin.c in Sources */,
 				300F18D921C256A500E84144 /* ACautomaton.c in Sources */,
 				30EBD05921C3FE1F00A9E6AA /* Search.c in Sources */,
 				3098805E21C20184005CA395 /* ChangeBoard.c in Sources */,
+				3023C59321CBDD3A001BCEA9 /* patterns.c in Sources */,
 				3098806321C206ED005CA395 /* Trans.c in Sources */,
 				30EBD05721C3F4AF00A9E6AA /* Generate.c in Sources */,
 				3098806021C202D1005CA395 /* Initialize.c in Sources */,

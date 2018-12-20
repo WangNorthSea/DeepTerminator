@@ -10,26 +10,24 @@
 #include <stdlib.h>
 #include <memory.h>
 #include "board.h"
+#include "array.h"
+#include "init.h"
 #include "settings.h"
+#include "generate.h"
+#include "win.h"
+#include "renju.h"
+#include "evaluate.h"
+#include "/Users/haoyuwang/Desktop/Deep Terminator/Deep Terminator/IO interface/trans.h"
+#include "/Users/haoyuwang/Desktop/Deep Terminator/Deep Terminator/main.h"
 
 int cut = 0;
-extern int evaNodes;
-
-int intCount(int * array);
-extern int evaluate(char * board, int color);
-extern int checkWhoWin(char * board);
-extern int checkRenjuWhoWin(char * board);
-extern int checkForbidMove(char * board);
-extern int * generateCAND(char * board, int color, int firstSearch);
-
-extern char * transIndexToCoordinate(int index);
 
 struct bestLine {
     int moves;
     int indexes[Depth];
 };
 
-int historyTable[225] = {0};
+int historyTable[2][225] = {{0}, {0}};
 
 int alphaBeta(char * board, int depth, int alpha, int beta, int color, struct bestLine * bL, int firstSearch, int maxDepth, int firstMove) {
     if (depth == 0) {
@@ -57,6 +55,13 @@ int alphaBeta(char * board, int depth, int alpha, int beta, int color, struct be
     int * indexArray =  generateCAND(board, color, firstSearch);
     
     int indexCount = intCount(indexArray);
+    
+    
+    if (maxDepth == 3 && depth == 2) {
+        for (i = 0; i < indexCount; i++)
+            printf("%s\n", transIndexToCoordinate(indexArray[i]));
+    }
+    
     
     for (i = 0; i < indexCount; i++) {
         if (!i) {
@@ -130,6 +135,11 @@ int alphaBeta(char * board, int depth, int alpha, int beta, int color, struct be
         
     someoneWin:
         
+        /*if (score == 10000)
+            score += depth;
+        else if (score == -10000)
+            score -= depth;*/
+        
         board[currentIndex] = Empty;
         
         if (depth == maxDepth)
@@ -137,7 +147,12 @@ int alphaBeta(char * board, int depth, int alpha, int beta, int color, struct be
         
         if (score >= beta) {
             cut++;
-            historyTable[currentIndex] += depth * depth;
+            if (beta != alpha + 1) {
+                if (color == Black)
+                    historyTable[0][currentIndex] += depth * depth;
+                else
+                    historyTable[1][currentIndex] += depth * depth;
+            }
             free(indexArray);
             return beta;
         }
@@ -148,22 +163,23 @@ int alphaBeta(char * board, int depth, int alpha, int beta, int color, struct be
             bL -> indexes[0] = currentIndex;
             memcpy(bL -> indexes + 1, bestL.indexes, sizeof(int) * (bestL.moves));
             bL -> moves = bestL.moves + 1;
-            /*if (depth == Depth)
-                decidedIndex = currentIndex;*/
         }
     }
-    historyTable[bestMove] += depth * depth;
+    if (color == Black)
+        historyTable[0][bestMove] += depth * depth;
+    else
+        historyTable[1][bestMove] += depth * depth;
     
-    /*if (depth == Depth)
-        board[decidedIndex] = color;*/
     free(indexArray);
     return alpha;
 }
 
 void initHistoryTable(void) {
-    int i;
-    for (i = 0; i < 225; i++)
-        historyTable[i] = 0;
+    int i, j;
+    for (j = 0; j < 2; j++) {
+        for (i = 0; i < 225; i++)
+            historyTable[j][i] = 0;
+    }
 }
 
 int search(char * board, int color) {

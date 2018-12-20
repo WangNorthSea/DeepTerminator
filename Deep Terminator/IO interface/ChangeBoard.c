@@ -7,13 +7,8 @@
 //
 
 #include <stdlib.h>
-#include "board.h"
-
-extern char board[225];
-extern int * pos;
-
-extern int * append(int * array, int value);
-extern int intCount(int * array);
+#include "/Users/haoyuwang/Desktop/Deep Terminator/Deep Terminator/AI Engine/board.h"
+#include "/Users/haoyuwang/Desktop/Deep Terminator/Deep Terminator/AI Engine/array.h"
 
 void put(int index) {
     pos = append(pos, index);

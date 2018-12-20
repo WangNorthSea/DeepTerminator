@@ -9,11 +9,8 @@
 #include <stdlib.h>
 #include <memory.h>
 #include "board.h"
-#include "ACautomaton.h"
-
-extern struct node * rootBlack;
-extern struct node * rootWhite;
-extern int * recognize(char * pattern, struct node * root, int keyCount);
+#include "AC.h"
+#include "init.h"
 
 int patternScore[19] = {
     10000,                       //Consecutive Five

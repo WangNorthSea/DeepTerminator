@@ -9,10 +9,8 @@
 #include <stdlib.h>
 #include "board.h"
 #include "settings.h"
-#include "ACautomaton.h"
-
-extern void insert(char * str, struct node * root, int id);
-extern void buildFailPtr(struct node * root);
+#include "patterns.h"
+#include "AC.h"
 
 struct node * rootBlack;
 struct node * rootWhite;
@@ -21,8 +19,7 @@ struct node * rootWhiteWin;
 struct node * rootBlackRenjuWin;
 struct node * rootForbidMove;
 
-char board[225];
-int * pos;
+unsigned char patMap[1 << 22];
 
 char blackPatterns[19][10] = {
     {Black, Black, Black, Black, Black, Stop},           //Consecutive Five
@@ -138,11 +135,84 @@ void initACautomaton(void) {
     buildFailPtr(rootWhiteWin);
 }
 
+void initPatMap(void) {
+    int i;
+    unsigned char line[11] = {0};
+    for (i = 0; i < (1 << 22); i++) {
+        int temp = i;
+        int j;
+        
+        for (j = 10; j >= 0; j--) {
+            line[j] = temp % 4;
+            temp /= 4;
+        }
+        
+        int len, space;
+        unsigned short int key = 1;
+        unsigned char pattern = 0;
+        unsigned char * left = line + 5, * right = line + 5;
+        
+        for (len = 0, space = 0; left >= line && len < 6 && *left != White && *left != Extra && space < 4; len++, left--) {
+            key = key << 1;
+            if (*left == Black)
+                key++;
+            
+            if (*left == Empty)
+                space++;
+            else
+                space = 0;
+        }
+        key = patternIndex[key];
+        
+        for (len = 0, space = 0; right < line + 11 && len < 6 && *right != White && *right != Extra && space < 4; len++, right++) {
+            key = key << 1;
+            if (*right == Black)
+                key++;
+            
+            if (*right == Empty)
+                space++;
+            else
+                space = 0;
+        }
+        pattern += patternMap[key];
+        
+        key = 1;
+        left = line + 5;
+        right = line + 5;
+        
+        for (len = 0, space = 0; left >= line && len < 6 && *left != Black && *left != Extra && space < 4; len++, left--) {
+            key = key << 1;
+            if (*left == White)
+                key++;
+            
+            if (*left == Empty)
+                space++;
+            else
+                space = 0;
+        }
+        key = patternIndex[key];
+        
+        for (len = 0, space = 0; right < line + 11 && *right != Black && *right != Extra && len < 6 && space < 4; len++, right++) {
+            key = key << 1;
+            if (*right == White)
+                key++;
+            
+            if (*right == Empty)
+                space++;
+            else
+                space = 0;
+        }
+        pattern += patternMap[key] << 4;
+        patMap[i] = pattern;
+    }
+}
+
 void init(void) {
     int i;
     for (i = 0; i < 225; i++)
         board[i] = Empty;
     pos = (int *)malloc(sizeof(int));
     pos[0] = -1;
-    initACautomaton();
+    //initACautomaton();
+    initPatMap();
 }

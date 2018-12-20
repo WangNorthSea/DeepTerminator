@@ -8,9 +8,13 @@
 
 #include <stdlib.h>
 #include <string.h>
-#include "ACautomaton.h"
+#include "array.h"
 
-extern int charCount(char * array);
+struct node {
+    struct node * next[3];
+    struct node * fail;
+    int id;
+};
 
 //构建字典树
 void insert(char * str, struct node * root, int id) {

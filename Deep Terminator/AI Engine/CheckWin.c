@@ -8,14 +8,9 @@
 
 #include <stdlib.h>
 #include "board.h"
-#include "ACautomaton.h"
-
-extern struct node * rootBlackWin;
-extern struct node * rootWhiteWin;
-extern struct node * rootBlackRenjuWin;
-
-extern char *** getBoardStr(char * board);
-extern int * recognize(char * pattern, struct node * root, int keycharCount);
+#include "AC.h"
+#include "init.h"
+#include "evaluate.h"
 
 int checkWhoWin(char * board) {
     int i, j;

@@ -9,7 +9,7 @@
 #ifndef settings_h
 #define settings_h
 
-#define Renju 0    //规则，为1有禁手，为0无禁手
+#define Renju 1    //规则，为1有禁手，为0无禁手
 
 #define radius 3          //落点生成半径
 #define Depth 6           //搜索深度

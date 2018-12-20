@@ -6,36 +6,31 @@
 //  Copyright © 2018 UCAS Developers. All rights reserved.
 //
 
+
+//TODO: 1.寻找更科学的评分方式 2.把禁手识别函数改成只识别新落子的四个方向
+
 #include <stdio.h>
 #include <string.h>
-#include "board.h"
-#include "settings.h"
+#include "AI Engine/board.h"
+#include "AI Engine/array.h"
+#include "AI Engine/settings.h"
+#include "AI Engine/init.h"
+#include "AI Engine/search.h"
+#include "AI Engine/win.h"
+#include "AI Engine/renju.h"
+#include "IO interface/changeBoard.h"
+#include "IO interface/trans.h"
 
 int evaNodes = 0;
-
-extern int cut;
-extern char board[225];
-extern int * pos;
-
-extern void init(void);
-extern void put(int index);
-extern int intCount(int * array);
-extern void removePiece(void);
-extern void removeAllPieces(void);
-extern int transCoordinateToIndex(char * position);
-extern char * transIndexToCoordinate(int index);
-
-extern int search(char * board, int color);
-extern int checkWhoWin(char * board);
-extern int checkForbidMove(char * board);
-extern int checkRenjuWhoWin(char * board);
 
 int main(void) {
     int whoWin = 0;
     int decidedIndex;
     char input[10];
     
+    printf("Initializing...Please wait...\n");
     init();
+    printf("Initialization finished!\n");
     
     while (1) {
         scanf("%s", input);
@@ -82,8 +77,10 @@ int main(void) {
             put(transCoordinateToIndex(input));
             
             if (Renju) {
-                if (checkForbidMove(board))
+                if (checkForbidMove(board)) {
                     printf("White wins! Black has made a forbidden move!\n");
+                    removeAllPieces();
+                }
                 else {
                     whoWin = checkRenjuWhoWin(board);
                     if (whoWin == Black) {

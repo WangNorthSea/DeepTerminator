@@ -15,6 +15,7 @@ extern struct node * rootBlackWin;
 extern struct node * rootWhiteWin;
 extern struct node * rootBlackRenjuWin;
 extern struct node * rootForbidMove;
+extern unsigned char patMap[1 << 22];
 
 extern void init(void);
 

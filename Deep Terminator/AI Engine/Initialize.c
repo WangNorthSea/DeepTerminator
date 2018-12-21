@@ -208,11 +208,22 @@ void initPatMap(void) {
 }
 
 void init(void) {
-    int i;
+    int i, j;
     for (i = 0; i < 225; i++)
         board[i] = Empty;
     pos = (int *)malloc(sizeof(int));
     pos[0] = -1;
+    for (i = 0; i < 2; i++) {
+        for (j = 0; j < 10; j++)
+            patCurrent.pat[i][j] = 0;
+    }
+    struct pattern initialPat;
+    initialPat.pat[0][0] = 0;    //这句只是为了消除initialPat未初始化的警告
+    for (i = 0; i < 2; i++) {
+        for (j = 0; j < 10; j++)
+            initialPat.pat[i][j] = 0;
+    }
+    patHistory[0] = initialPat;
     //initACautomaton();
     initPatMap();
 }

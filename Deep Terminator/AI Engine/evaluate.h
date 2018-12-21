@@ -9,8 +9,7 @@
 #ifndef evaluate_h
 #define evaluate_h
 
-extern int getScore(int * result);
-extern char *** getBoardStr(char * board);
-extern int evaluate(char * board, int color);
+extern int getScore(int * patterns);
+extern int evaluate(int color);
 
 #endif /* evaluate_h */

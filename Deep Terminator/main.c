@@ -6,9 +6,6 @@
 //  Copyright © 2018 UCAS Developers. All rights reserved.
 //
 
-
-//TODO: 1.寻找更科学的评分方式 2.把禁手识别函数改成只识别新落子的四个方向
-
 #include <stdio.h>
 #include <string.h>
 #include "AI Engine/board.h"
@@ -20,8 +17,35 @@
 #include "AI Engine/renju.h"
 #include "IO interface/changeBoard.h"
 #include "IO interface/trans.h"
+#include "AI Engine/patterns.h"
 
 int evaNodes = 0;
+
+void printPats(void) {
+    printf("Black:\n");
+    printf("SleepOne = %d\n", patCurrent.pat[0][SleepOne]);
+    printf("LiveOne = %d\n", patCurrent.pat[0][LiveOne]);
+    printf("SleepTwo = %d\n", patCurrent.pat[0][SleepTwo]);
+    printf("LiveTwo = %d\n", patCurrent.pat[0][LiveTwo]);
+    printf("SleepThree = %d\n", patCurrent.pat[0][SleepThree]);
+    printf("LiveThree = %d\n", patCurrent.pat[0][LiveThree]);
+    printf("RushFour = %d\n", patCurrent.pat[0][RushFour]);
+    printf("LiveFour = %d\n", patCurrent.pat[0][LiveFour]);
+    printf("Five = %d\n", patCurrent.pat[0][Five]);
+    
+    printf("\n");
+    
+    printf("White:\n");
+    printf("SleepOne = %d\n", patCurrent.pat[1][SleepOne]);
+    printf("LiveOne = %d\n", patCurrent.pat[1][LiveOne]);
+    printf("SleepTwo = %d\n", patCurrent.pat[1][SleepTwo]);
+    printf("LiveTwo = %d\n", patCurrent.pat[1][LiveTwo]);
+    printf("SleepThree = %d\n", patCurrent.pat[1][SleepThree]);
+    printf("LiveThree = %d\n", patCurrent.pat[1][LiveThree]);
+    printf("RushFour = %d\n", patCurrent.pat[1][RushFour]);
+    printf("LiveFour = %d\n", patCurrent.pat[1][LiveFour]);
+    printf("Five = %d\n", patCurrent.pat[1][Five]);
+}
 
 int main(void) {
     int whoWin = 0;
@@ -71,12 +95,14 @@ int main(void) {
         }
         else if (!strcmp(input, "exit"))
             break;
-        else if (!strcmp(input, "remove"))
+        else if (!strcmp(input, "remove")) {
             removePiece();
+            printPats();
+        }
         else {
             put(transCoordinateToIndex(input));
-            
-            if (Renju) {
+            printPats();
+            /*if (Renju) {
                 if (checkForbidMove(board)) {
                     printf("White wins! Black has made a forbidden move!\n");
                     removeAllPieces();
@@ -103,7 +129,7 @@ int main(void) {
                     printf("White wins!\n");
                     removeAllPieces();
                 }
-            }
+            }*/
         }
     }
     

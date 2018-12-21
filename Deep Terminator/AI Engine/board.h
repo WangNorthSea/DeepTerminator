@@ -15,9 +15,18 @@
 #define Extra 3
 #define Stop -1
 
+struct pattern {
+    int pat[2][10];   //第一个下标0代表黑子棋型，1代表白子棋型
+};
+
 extern char board[225];
 extern int * pos;
+extern unsigned short int moveCount;
+extern struct pattern patCurrent;
+extern struct pattern patHistory[256];
 
-extern unsigned int * getPatternCodes(int index);
+extern unsigned int getPatternCode(char * board, int index, int direction);
+extern void putPiece(char * board, int index, int color);
+extern void takePiece(char * board, int index);
 
 #endif /* board_h */

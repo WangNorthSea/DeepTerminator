@@ -17,6 +17,6 @@
 #define Beta 99999        //beta初值
 #define ChildNodes 20     //最大子节点数
 #define IterationDepth 2  //迭代加深起始深度
-#define EnableHistoryTable 1  //是否启用历史表
+//#define EnableHistoryTable 1  //是否启用历史表
 
 #endif /* settings_h */

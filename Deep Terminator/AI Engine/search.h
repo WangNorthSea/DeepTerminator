@@ -10,7 +10,6 @@
 #define search_h
 
 extern int cut;
-extern int historyTable[2][225];
 
 extern int search(char * board, int color);
 

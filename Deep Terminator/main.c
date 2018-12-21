@@ -66,6 +66,7 @@ int main(void) {
             else
                 decidedIndex = search(board, Black);
             put(decidedIndex);
+            
 #ifdef Debug
             printf("evaluated nodes = %d\n", evaNodes);
             printf("alphaBeta cut = %d\n", cut);
@@ -73,8 +74,7 @@ int main(void) {
             cut = 0;
 #endif
             
-#ifdef Renju
-            whoWin = checkRenjuWhoWin(board);
+            whoWin = checkWhoWin();
             if (whoWin == Black) {
                 printf("Black wins!\n");
                 removeAllPieces();
@@ -83,18 +83,6 @@ int main(void) {
                 printf("White wins!\n");
                 removeAllPieces();
             }
-#else
-            whoWin = checkWhoWin(board);
-            if (whoWin == Black) {
-                printf("Black wins!\n");
-                removeAllPieces();
-            }
-            else if (whoWin == White) {
-                printf("White wins!\n");
-                removeAllPieces();
-            }
-#endif
-            printf("Done!\n");
         }
         else if (!strcmp(input, "exit"))
             break;
@@ -109,34 +97,22 @@ int main(void) {
 #ifdef Debug
             printPats();
 #endif
-            /*if (Renju) {
-                if (checkForbidMove(board)) {
-                    printf("White wins! Black has made a forbidden move!\n");
-                    removeAllPieces();
-                }
-                else {
-                    whoWin = checkRenjuWhoWin(board);
-                    if (whoWin == Black) {
-                        printf("Black wins!\n");
-                        removeAllPieces();
-                    }
-                    else if (whoWin == White) {
-                        printf("White wins!\n");
-                        removeAllPieces();
-                    }
-                }
+            
+#ifdef Renju
+            if (checkForbidMove(board, transCoordinateToIndex(input))) {
+                printf("White wins! Black has made a forbidden move!\n");
+                removeAllPieces();
             }
-            else {
-                whoWin = checkWhoWin(board);
-                if (whoWin == Black) {
-                    printf("Black wins!\n");
-                    removeAllPieces();
-                }
-                else if (whoWin == White) {
-                    printf("White wins!\n");
-                    removeAllPieces();
-                }
-            }*/
+#endif
+            whoWin = checkWhoWin();
+            if (whoWin == Black) {
+                printf("Black wins!\n");
+                removeAllPieces();
+            }
+            else if (whoWin == White) {
+                printf("White wins!\n");
+                removeAllPieces();
+            }
         }
     }
     

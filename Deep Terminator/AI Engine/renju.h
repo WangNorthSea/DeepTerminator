@@ -9,6 +9,6 @@
 #ifndef renju_h
 #define renju_h
 
-extern int checkForbidMove(char * board);
+extern int checkForbidMove(char * board, int index);
 
 #endif /* reju_h */

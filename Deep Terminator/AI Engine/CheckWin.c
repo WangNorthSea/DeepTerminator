@@ -11,10 +11,10 @@
 #include "init.h"
 #include "evaluate.h"
 
-int checkWhoWin(char * board) {
-    return 0;
-}
-
-int checkRenjuWhoWin(char * board) {
+int checkWhoWin(void) {
+    if (patCurrent.pat[0][8])
+        return Black;
+    if (patCurrent.pat[1][8])
+        return White;
     return 0;
 }

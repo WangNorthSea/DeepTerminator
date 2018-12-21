@@ -102,6 +102,5 @@ void init(void) {
             initialPat.pat[i][j] = 0;
     }
     patHistory[0] = initialPat;
-    //initACautomaton();
     initPatMap();
 }

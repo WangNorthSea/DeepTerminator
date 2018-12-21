@@ -9,6 +9,6 @@
 #ifndef generate_h
 #define generate_h
 
-extern int * generateCAND(char * board);
+extern int * generateCAND(char * board, int color);
 
 #endif /* generate_h */

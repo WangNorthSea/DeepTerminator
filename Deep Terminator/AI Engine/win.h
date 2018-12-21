@@ -9,7 +9,6 @@
 #ifndef win_h
 #define win_h
 
-extern int checkWhoWin(char * board);
-extern int checkRenjuWhoWin(char * board);
+extern int checkWhoWin(void);
 
 #endif /* win_h */

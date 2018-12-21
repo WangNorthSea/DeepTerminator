@@ -43,7 +43,7 @@ int alphaBeta(char * board, int depth, int alpha, int beta, int color, struct be
     
     int i;
     int score;
-    //int whoWin = 0;
+    int whoWin = 0;
     int foundPV = 0;
     struct bestLine bestL;
     bestL.moves = 0;
@@ -51,37 +51,30 @@ int alphaBeta(char * board, int depth, int alpha, int beta, int color, struct be
     for (i = 0; i < Depth; i++)
         bestL.indexes[i] = 0;
     
-    int * indexArray =  generateCAND(board);
+    int * indexArray =  generateCAND(board, color);
     int indexCount = intCount(indexArray);
     
     for (i = 0; i < indexCount; i++) {
         putPiece(board, indexArray[i], color);
         
-        /*if (Renju) {
-            if (color == Black) {
-                if (checkForbidMove(board)) {
-                    board[currentIndex] = Empty;
-                    continue;
-                }
+#ifdef Renju
+        if (color == Black) {
+            if (checkForbidMove(board, indexArray[i])) {
+                takePiece(board, indexArray[i]);
+                continue;
             }
-            whoWin = checkRenjuWhoWin(board);
         }
-        else
-            whoWin = checkWhoWin(board);
+#endif
         
+        whoWin = checkWhoWin();
+
         if (whoWin) {
             if (whoWin == color)
                 score = 10000000;
             else
                 score = -10000000;
             goto someoneWin;
-        }*/
-        
-#ifdef Renju
-        
-#else
-        
-#endif
+        }
         
         if (foundPV) {
             if (color == Black)
@@ -171,7 +164,7 @@ int search(char * board, int color) {
             printf("%s ", transIndexToCoordinate(bests[j]));
         printf("\n");
 #endif
-        if (bestScore >= 10000 || bestScore <= -10000)
+        if (bestScore >= 10000000 || bestScore <= -10000000)
             break;
             
         if (i < Depth) {

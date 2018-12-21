@@ -9,6 +9,8 @@
 #ifndef main_h
 #define main_h
 
+#ifdef Debug
 extern int evaNodes;
+#endif
 
 #endif /* main_h */

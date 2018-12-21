@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		300F18D921C256A500E84144 /* ACautomaton.c in Sources */ = {isa = PBXBuildFile; fileRef = 300F18D821C256A500E84144 /* ACautomaton.c */; };
 		301AC7B021CBE75000741FAE /* board.c in Sources */ = {isa = PBXBuildFile; fileRef = 301AC7AF21CBE75000741FAE /* board.c */; };
 		3023C59321CBDD3A001BCEA9 /* patterns.c in Sources */ = {isa = PBXBuildFile; fileRef = 3023C59221CBDD3A001BCEA9 /* patterns.c */; };
 		3034A3B721C52A2000E7B3DE /* Renju.c in Sources */ = {isa = PBXBuildFile; fileRef = 3034A3B621C52A2000E7B3DE /* Renju.c */; };
@@ -35,11 +34,9 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		300F18D821C256A500E84144 /* ACautomaton.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ACautomaton.c; sourceTree = "<group>"; };
 		301AC7AE21CBE72200741FAE /* main.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = main.h; sourceTree = "<group>"; };
 		301AC7AF21CBE75000741FAE /* board.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = board.c; sourceTree = "<group>"; };
 		301AC7B121CBE7B500741FAE /* array.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = array.h; sourceTree = "<group>"; };
-		301AC7B221CBE91F00741FAE /* AC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AC.h; sourceTree = "<group>"; };
 		301AC7B321CBE99900741FAE /* init.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = init.h; sourceTree = "<group>"; };
 		301AC7B421CBEA7C00741FAE /* evaluate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = evaluate.h; sourceTree = "<group>"; };
 		301AC7B521CBEAE100741FAE /* generate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = generate.h; sourceTree = "<group>"; };
@@ -115,8 +112,6 @@
 				3098805B21C1F93B005CA395 /* ArrayOp.c */,
 				301AC7B321CBE99900741FAE /* init.h */,
 				3098805F21C202D1005CA395 /* Initialize.c */,
-				301AC7B221CBE91F00741FAE /* AC.h */,
-				300F18D821C256A500E84144 /* ACautomaton.c */,
 				301AC7B421CBEA7C00741FAE /* evaluate.h */,
 				30A7067B21C39C150078CBC6 /* Evaluate.c */,
 				301AC7B521CBEAE100741FAE /* generate.h */,
@@ -195,7 +190,6 @@
 				301AC7B021CBE75000741FAE /* board.c in Sources */,
 				3034A3B721C52A2000E7B3DE /* Renju.c in Sources */,
 				30CF996B21C4914E00A0EC68 /* CheckWin.c in Sources */,
-				300F18D921C256A500E84144 /* ACautomaton.c in Sources */,
 				30EBD05921C3FE1F00A9E6AA /* Search.c in Sources */,
 				3098805E21C20184005CA395 /* ChangeBoard.c in Sources */,
 				3023C59321CBDD3A001BCEA9 /* patterns.c in Sources */,

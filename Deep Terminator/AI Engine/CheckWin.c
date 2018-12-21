@@ -8,7 +8,6 @@
 
 #include <stdlib.h>
 #include "board.h"
-#include "AC.h"
 #include "init.h"
 #include "evaluate.h"
 

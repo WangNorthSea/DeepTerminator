@@ -19,7 +19,9 @@
 #include "IO interface/trans.h"
 #include "AI Engine/patterns.h"
 
+#ifdef Debug
 int evaNodes = 0;
+#endif
 
 void printPats(void) {
     printf("Black:\n");
@@ -64,44 +66,49 @@ int main(void) {
             else
                 decidedIndex = search(board, Black);
             put(decidedIndex);
-            
+#ifdef Debug
             printf("evaluated nodes = %d\n", evaNodes);
             printf("alphaBeta cut = %d\n", cut);
             evaNodes = 0;
             cut = 0;
+#endif
             
-            if (Renju) {
-                whoWin = checkRenjuWhoWin(board);
-                if (whoWin == Black) {
-                    printf("Black wins!\n");
-                    removeAllPieces();
-                }
-                else if (whoWin == White) {
-                    printf("White wins!\n");
-                    removeAllPieces();
-                }
+#ifdef Renju
+            whoWin = checkRenjuWhoWin(board);
+            if (whoWin == Black) {
+                printf("Black wins!\n");
+                removeAllPieces();
             }
-            else {
-                whoWin = checkWhoWin(board);
-                if (whoWin == Black) {
-                    printf("Black wins!\n");
-                    removeAllPieces();
-                }
-                else if (whoWin == White) {
-                    printf("White wins!\n");
-                    removeAllPieces();
-                }
+            else if (whoWin == White) {
+                printf("White wins!\n");
+                removeAllPieces();
             }
+#else
+            whoWin = checkWhoWin(board);
+            if (whoWin == Black) {
+                printf("Black wins!\n");
+                removeAllPieces();
+            }
+            else if (whoWin == White) {
+                printf("White wins!\n");
+                removeAllPieces();
+            }
+#endif
+            printf("Done!\n");
         }
         else if (!strcmp(input, "exit"))
             break;
         else if (!strcmp(input, "remove")) {
             removePiece();
+#ifdef Debug
             printPats();
+#endif
         }
         else {
             put(transCoordinateToIndex(input));
+#ifdef Debug
             printPats();
+#endif
             /*if (Renju) {
                 if (checkForbidMove(board)) {
                     printf("White wins! Black has made a forbidden move!\n");

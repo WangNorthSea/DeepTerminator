@@ -7,7 +7,6 @@
 //
 
 #include <stdlib.h>
-#include "AC.h"
 #include "init.h"
 #include "evaluate.h"
 

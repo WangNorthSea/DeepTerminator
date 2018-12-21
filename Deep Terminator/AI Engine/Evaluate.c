@@ -9,7 +9,6 @@
 #include <stdlib.h>
 #include <memory.h>
 #include "board.h"
-#include "AC.h"
 #include "init.h"
 
 int patternScore[9] = {

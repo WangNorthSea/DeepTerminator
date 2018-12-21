@@ -10,7 +10,6 @@
 #include <memory.h>
 #include "board.h"
 #include "settings.h"
-#include "AC.h"
 #include "array.h"
 #include "init.h"
 #include "evaluate.h"

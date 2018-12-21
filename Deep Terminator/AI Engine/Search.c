@@ -9,10 +9,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <memory.h>
+#include "settings.h"
 #include "board.h"
 #include "array.h"
 #include "init.h"
-#include "settings.h"
 #include "generate.h"
 #include "win.h"
 #include "renju.h"
@@ -20,7 +20,9 @@
 #include "/Users/haoyuwang/Desktop/Deep Terminator/Deep Terminator/IO interface/trans.h"
 #include "/Users/haoyuwang/Desktop/Deep Terminator/Deep Terminator/main.h"
 
+#ifdef Debug
 int cut = 0;
+#endif
 
 struct bestLine {
     int moves;
@@ -29,7 +31,9 @@ struct bestLine {
 
 int alphaBeta(char * board, int depth, int alpha, int beta, int color, struct bestLine * bL, int maxDepth) {
     if (depth == 0) {
+#ifdef Debug
         evaNodes++;
+#endif
         bL -> moves = 0;
         if (color == Black)
             return evaluate(White);
@@ -73,6 +77,12 @@ int alphaBeta(char * board, int depth, int alpha, int beta, int color, struct be
             goto someoneWin;
         }*/
         
+#ifdef Renju
+        
+#else
+        
+#endif
+        
         if (foundPV) {
             if (color == Black)
                 score = -alphaBeta(board, depth - 1, -alpha - 1, -alpha, White, &bestL, maxDepth);  //进行PVS
@@ -101,12 +111,15 @@ int alphaBeta(char * board, int depth, int alpha, int beta, int color, struct be
         
     someoneWin:
         takePiece(board, indexArray[i]);
-        
+#ifdef Debug
         if (depth == maxDepth)
             printf("%s = %d\n", transIndexToCoordinate(indexArray[i]), score);
+#endif
         
         if (score >= beta) {
+#ifdef Debug
             cut++;
+#endif
             free(indexArray);
             return beta;
         }
@@ -147,7 +160,7 @@ int search(char * board, int color) {
             bests[j] = bL -> indexes[j];
         
         decidedIndex = bests[0];
-        
+#ifdef Debug
         if (color == Black)
             printf("Black:%s  Score:%d\n", transIndexToCoordinate(decidedIndex), bestScore);
         else
@@ -157,13 +170,15 @@ int search(char * board, int color) {
         for (j = 0; j < Depth; j++)
             printf("%s ", transIndexToCoordinate(bests[j]));
         printf("\n");
-        
+#endif
         if (bestScore >= 10000 || bestScore <= -10000)
             break;
             
         if (i < Depth) {
+#ifdef Debug
             evaNodes = 0;
             cut = 0;
+#endif
             free(bL);
         }
     }

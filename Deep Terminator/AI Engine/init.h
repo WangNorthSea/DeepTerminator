@@ -9,12 +9,6 @@
 #ifndef init_h
 #define init_h
 
-extern struct node * rootBlack;
-extern struct node * rootWhite;
-extern struct node * rootBlackWin;
-extern struct node * rootWhiteWin;
-extern struct node * rootBlackRenjuWin;
-extern struct node * rootForbidMove;
 extern unsigned char patMap[1 << 22];
 
 extern void init(void);

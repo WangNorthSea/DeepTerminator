@@ -9,6 +9,8 @@
 #include <stdlib.h>
 #include <memory.h>
 #include "init.h"
+#include "settings.h"
+#include "zobrist.h"
 
 #define Empty 0
 #define Black 1
@@ -87,7 +89,9 @@ unsigned int getPatternCode(char * board, int index, int direction) {
 
 //落子时正常调用即可，即时改变局面双方棋型
 void putPiece(char * board, int index, int color) {
-    //add hash key here
+#ifdef HASH
+    hashKey ^= zobristMap[index][color - 1];
+#endif
     int i;
     unsigned char pats[4];
     unsigned char pats2[12] = {9};
@@ -157,8 +161,10 @@ void putPiece(char * board, int index, int color) {
     patHistory[moveCount] = patCurrent;
 }
 
-void takePiece(char * board, int index) {
-    //add hash key here
+void takePiece(char * board, int index, int color) {
+#ifdef HASH
+    hashKey ^= zobristMap[index][color - 1];
+#endif
     moveCount--;
     board[index] = Empty;
     patCurrent = patHistory[moveCount];

@@ -323,20 +323,18 @@ void quickSort(int * Array, int len, int * indexArray, int descend) {
 
 int * newPattern(char * board, int index, int color) {
     int i;
-    board[index] = color;
     int * newPats = (int *)malloc(sizeof(int) * 10);
     memset(newPats, 0, sizeof(int) * 10);
     
     if (color == Black) {
         for (i = 0; i < 4; i++)
-            newPats[patMap[getPatternCode(board, index, i)] & 15]++;
+            newPats[patMap[getPatternCode(board, index, i) ^ (Black << 10)] & 15]++;
     }
     else {
         for (i = 0; i < 4; i++)
-            newPats[patMap[getPatternCode(board, index, i)] >> 4]++;
+            newPats[patMap[getPatternCode(board, index, i) ^ (White << 10)] >> 4]++;
     }
     
-    board[index] = Empty;
     return newPats;
 }
 
@@ -454,8 +452,18 @@ restart:
         if (spaceCount > ChildNodes) {
             spaceArray = (int *)realloc(spaceArray, sizeof(int) * (ChildNodes + 1));
             spaceArray[ChildNodes] = -1;
+#ifdef HISTORY
+            spaceCount = ChildNodes;
+#endif
         }
         
+#ifdef HISTORY
+        scoreArray = (int *)realloc(scoreArray, sizeof(int) * spaceCount);
+        for (i = 0; i < spaceCount; i++)
+            scoreArray[i] = historyTable[spaceArray[i]];
+        quickSort(scoreArray, spaceCount, spaceArray, 1);
+#endif
+        free(scoreArray);
         free(indexArray);
         return spaceArray;
     }

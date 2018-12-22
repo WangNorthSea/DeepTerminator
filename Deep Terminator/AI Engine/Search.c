@@ -17,6 +17,7 @@
 #include "win.h"
 #include "renju.h"
 #include "evaluate.h"
+#include "zobrist.h"
 #include "/Users/haoyuwang/Desktop/Deep Terminator/Deep Terminator/IO interface/trans.h"
 #include "/Users/haoyuwang/Desktop/Deep Terminator/Deep Terminator/main.h"
 
@@ -29,7 +30,35 @@ struct bestLine {
     int indexes[Depth];
 };
 
+#ifdef HISTORY
+int historyTable[225];
+#endif
+
 int alphaBeta(char * board, int depth, int alpha, int beta, int color, struct bestLine * bL, int maxDepth) {
+#ifdef HASH
+    int indexInHash = hashKey & hashIndex;
+    if (zobristTable[indexInHash].key == hashKey) {
+        if (zobristTable[indexInHash].depth == depth) {
+#ifdef Debug
+            hashHit++;
+#endif
+            if (zobristTable[indexInHash].kind == betaNode) {
+                if (zobristTable[indexInHash].score >= beta)
+                    return zobristTable[indexInHash].score;
+            }
+            else if (zobristTable[indexInHash].kind == alphaNode) {
+                if (zobristTable[indexInHash].score <= alpha)
+                    return zobristTable[indexInHash].score;
+            }
+            else if (zobristTable[indexInHash].kind == PVNode) {
+                if (zobristTable[indexInHash].score > alpha && zobristTable[indexInHash].score < beta)
+                    return zobristTable[indexInHash].score;
+            }
+        }
+        else if (zobristTable[indexInHash].kind == overNode)
+            return zobristTable[indexInHash].score;
+    }
+#endif
     if (depth == 0) {
 #ifdef Debug
         evaNodes++;
@@ -45,6 +74,9 @@ int alphaBeta(char * board, int depth, int alpha, int beta, int color, struct be
     int score;
     int whoWin = 0;
     int foundPV = 0;
+#ifdef HISTORY
+    int bestMove = 0;
+#endif
     struct bestLine bestL;
     bestL.moves = 0;
     
@@ -60,7 +92,7 @@ int alphaBeta(char * board, int depth, int alpha, int beta, int color, struct be
 #ifdef Renju
         if (color == Black) {
             if (checkForbidMove(board, indexArray[i])) {
-                takePiece(board, indexArray[i]);
+                takePiece(board, indexArray[i], color);
                 continue;
             }
         }
@@ -73,6 +105,13 @@ int alphaBeta(char * board, int depth, int alpha, int beta, int color, struct be
                 score = 10000000;
             else
                 score = -10000000;
+#ifdef HASH
+            indexInHash = hashKey & hashIndex;
+            zobristTable[indexInHash].key = hashKey;
+            zobristTable[indexInHash].kind = overNode;
+            zobristTable[indexInHash].depth = 100;
+            zobristTable[indexInHash].score = score;
+#endif
             goto someoneWin;
         }
         
@@ -103,7 +142,7 @@ int alphaBeta(char * board, int depth, int alpha, int beta, int color, struct be
         }
         
     someoneWin:
-        takePiece(board, indexArray[i]);
+        takePiece(board, indexArray[i], color);
 #ifdef Debug
         if (depth == maxDepth)
             printf("%s = %d\n", transIndexToCoordinate(indexArray[i]), score);
@@ -113,21 +152,61 @@ int alphaBeta(char * board, int depth, int alpha, int beta, int color, struct be
 #ifdef Debug
             cut++;
 #endif
+#ifdef HASH
+            indexInHash = hashKey & hashIndex;
+            zobristTable[indexInHash].key = hashKey;
+            zobristTable[indexInHash].kind = betaNode;
+            zobristTable[indexInHash].depth = depth;
+            zobristTable[indexInHash].score = score;
+#endif
+#ifdef HISTORY
+            historyTable[indexArray[i]] += depth * depth;
+#endif
             free(indexArray);
             return beta;
         }
         if (score > alpha) {
             alpha = score;
             foundPV = 1;
+#ifdef HISTORY
+            bestMove = indexArray[i];
+#endif
+#ifdef HASH
+            indexInHash = hashKey & hashIndex;
+            zobristTable[indexInHash].key = hashKey;
+            zobristTable[indexInHash].kind = PVNode;
+            zobristTable[indexInHash].depth = depth;
+            zobristTable[indexInHash].score = score;
+#endif
             bL -> indexes[0] = indexArray[i];
             memcpy(bL -> indexes + 1, bestL.indexes, sizeof(int) * (bestL.moves));
             bL -> moves = bestL.moves + 1;
+            continue;
         }
+#ifdef HASH
+        indexInHash = hashKey & hashIndex;
+        zobristTable[indexInHash].key = hashKey;
+        zobristTable[indexInHash].kind = alphaNode;
+        zobristTable[indexInHash].depth = depth;
+        zobristTable[indexInHash].score = score;
+#endif
     }
     
+#ifdef HISTORY
+    if (bestMove)
+        historyTable[bestMove] += depth * depth;
+#endif
     free(indexArray);
     return alpha;
 }
+
+#ifdef HISTORY
+void initHistoryTable(void) {
+    int i;
+    for (i = 0; i < 225; i++)
+        historyTable[i] = 0;
+}
+#endif
 
 int search(char * board, int color) {
     int i, j;
@@ -140,6 +219,9 @@ int search(char * board, int color) {
     for (i = 0; i < 225; i++)
         boardToSearch[i] = board[i];
     
+#ifdef HISTORY
+    initHistoryTable();
+#endif
     for (i = IterationDepth; i <= Depth; i++) {
         bL = (struct bestLine *)malloc(sizeof(struct bestLine));
         bL -> moves = 0;
@@ -160,8 +242,11 @@ int search(char * board, int color) {
             printf("White:%s  Score:%d\n", transIndexToCoordinate(decidedIndex), bestScore);
         
         printf("bestline:");
-        for (j = 0; j < Depth; j++)
+        for (j = 0; j < Depth; j++) {
+            if (!bests[j])
+                break;
             printf("%s ", transIndexToCoordinate(bests[j]));
+        }
         printf("\n");
 #endif
         if (bestScore >= 10000000 || bestScore <= -10000000)
@@ -169,6 +254,7 @@ int search(char * board, int color) {
             
         if (i < Depth) {
 #ifdef Debug
+            hashHit = 0;
             evaNodes = 0;
             cut = 0;
 #endif

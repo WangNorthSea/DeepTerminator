@@ -13,4 +13,8 @@ extern int cut;
 
 extern int search(char * board, int color);
 
+#ifdef HISTORY
+extern int historyTable[225];
+#endif
+
 #endif /* search_h */

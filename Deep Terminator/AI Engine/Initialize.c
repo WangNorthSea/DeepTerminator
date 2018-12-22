@@ -7,9 +7,11 @@
 //
 
 #include <stdlib.h>
+#include <time.h>
 #include "board.h"
 #include "settings.h"
 #include "patterns.h"
+#include "zobrist.h"
 
 unsigned char patMap[1 << 22];
 
@@ -85,6 +87,36 @@ void initPatMap(void) {
     }
 }
 
+#ifdef HASH
+void initHash(void) {
+    int i;
+    unsigned long long int a, b;
+    
+    for (i = 0; i < 225; i++) {
+        srand((unsigned int)clock());
+        a = rand();
+        srand((unsigned int)clock());
+        b = rand();
+        zobristMap[i][0] = (a << 32) | b;
+    }
+    
+    for (i = 0; i < 225; i++) {
+        srand((unsigned int)clock());
+        a = rand();
+        srand((unsigned int)clock());
+        b = rand();
+        zobristMap[i][1] = (a << 32) | b;
+    }
+    
+    for (i = 0; i < hashSize; i++) {
+        zobristTable[i].key = 0;
+        zobristTable[i].kind = unknown;
+        zobristTable[i].depth = 0;
+        zobristTable[i].score = 0;
+    }
+}
+#endif
+
 void init(void) {
     int i, j;
     for (i = 0; i < 225; i++)
@@ -103,4 +135,7 @@ void init(void) {
     }
     patHistory[0] = initialPat;
     initPatMap();
+#ifdef HASH
+    initHash();
+#endif
 }

@@ -11,6 +11,7 @@
 
 #ifdef Debug
 extern int evaNodes;
+extern int hashHit;
 #endif
 
 #endif /* main_h */

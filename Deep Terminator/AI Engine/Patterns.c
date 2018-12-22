@@ -1,5 +1,5 @@
 //
-//  patterns.c
+//  Patterns.c
 //  Deep Terminator
 //
 //  Created by 王浩宇 on 2018/12/20.

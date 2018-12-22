@@ -27,6 +27,6 @@ extern struct pattern patHistory[256];
 
 extern unsigned int getPatternCode(char * board, int index, int direction);
 extern void putPiece(char * board, int index, int color);
-extern void takePiece(char * board, int index);
+extern void takePiece(char * board, int index, int color);
 
 #endif /* board_h */

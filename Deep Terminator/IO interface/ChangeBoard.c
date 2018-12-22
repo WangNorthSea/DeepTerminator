@@ -20,7 +20,10 @@ void put(int index) {
 
 void removePiece(void) {
     int piececharCount = intCount(pos);
-    takePiece(board, pos[piececharCount - 1]);
+    if (piececharCount % 2 != 0)
+        takePiece(board, pos[piececharCount - 1], Black);
+    else
+        takePiece(board, pos[piececharCount - 1], White);
     pos[piececharCount - 1] = -1;
     pos = (int *)realloc(pos, sizeof(int) * piececharCount);
 }

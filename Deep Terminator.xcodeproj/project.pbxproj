@@ -49,9 +49,9 @@
 		3023C59121CBDD3A001BCEA9 /* patterns.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = patterns.h; sourceTree = "<group>"; };
 		3023C59221CBDD3A001BCEA9 /* Patterns.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = Patterns.c; sourceTree = "<group>"; };
 		3034A3B621C52A2000E7B3DE /* Renju.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = Renju.c; sourceTree = "<group>"; };
-		3075D3C021CE09FD0098267A /* Deep Terminator */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; name = "Deep Terminator"; path = "/Users/haoyuwang/Desktop/Deep Terminator/build/Debug/Deep Terminator"; sourceTree = "<absolute>"; };
 		3075D3C121CE2AB10098267A /* zobrist.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = zobrist.h; sourceTree = "<group>"; };
 		3075D3C221CE2AB10098267A /* Zobrist.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = Zobrist.c; sourceTree = "<group>"; };
+		3075D3DB21CE6A490098267A /* Deep Terminator */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; name = "Deep Terminator"; path = "/Users/haoyuwang/Desktop/Deep Terminator/build/Debug/Deep Terminator"; sourceTree = "<absolute>"; };
 		307F153421C1E18800324B07 /* main.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
 		3098805B21C1F93B005CA395 /* ArrayOp.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ArrayOp.c; sourceTree = "<group>"; };
 		3098805D21C20184005CA395 /* ChangeBoard.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ChangeBoard.c; sourceTree = "<group>"; };
@@ -150,7 +150,7 @@
 			);
 			name = "Deep Terminator";
 			productName = "Deep Terminator";
-			productReference = 3075D3C021CE09FD0098267A /* Deep Terminator */;
+			productReference = 3075D3DB21CE6A490098267A /* Deep Terminator */;
 			productType = "com.apple.product-type.tool";
 		};
 /* End PBXNativeTarget section */

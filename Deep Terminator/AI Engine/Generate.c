@@ -338,14 +338,16 @@ int * newPattern(char * board, int index, int color) {
     return newPats;
 }
 
-int getScoreForSort(int * patterns) {
+int getScoreForSort(int * selfPats, int * enemyPats) {
     int i;
-    int score = 0;
+    int selfScore = 0, enemyScore = 0;
     
-    for (i = 0; i < 9; i++)
-        score += patterns[i] * scoreForSort[i];
+    for (i = 0; i < 9; i++) {
+        selfScore += selfPats[i] * scoreForSort[i];
+        enemyScore += enemyPats[i] * scoreForSort[i];
+    }
     
-    return score;
+    return selfScore > enemyScore ? selfScore : enemyScore;
 }
 
 int * generateCAND(char * board, int color) {
@@ -442,10 +444,14 @@ restart:
     
     if (indexArray[0] == -1) {
         int * scoreArray = (int *)malloc(sizeof(int) * spaceCount);
+        int * selfPats;
+        int * enemyPats;
         for (i = 0; i < spaceCount; i++) {
-            newPats = newPattern(board, spaceArray[i], color);
-            scoreArray[i] = getScoreForSort(newPats);
-            free(newPats);
+            selfPats = newPattern(board, spaceArray[i], color);
+            enemyPats = newPattern(board, spaceArray[i], color ^ 3);
+            scoreArray[i] = getScoreForSort(selfPats, enemyPats);
+            free(selfPats);
+            free(enemyPats);
         }
         quickSort(scoreArray, spaceCount, spaceArray, 1);
         

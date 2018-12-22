@@ -34,7 +34,7 @@ struct bestLine {
 int historyTable[225];
 #endif
 
-int alphaBeta(char * board, int depth, int alpha, int beta, int color, struct bestLine * bL, int maxDepth) {
+int alphaBeta(char * board, int depth, int alpha, int beta, int color, struct bestLine * bL, int maxDepth, int firstMove) {
 #ifdef HASH
     int indexInHash = hashKey & hashIndex;
     if (zobristTable[indexInHash].key == hashKey) {
@@ -73,7 +73,9 @@ int alphaBeta(char * board, int depth, int alpha, int beta, int color, struct be
     int i;
     int score;
     int whoWin = 0;
+    int currentIndex = 0;
     int foundPV = 0;
+    unsigned char foundForbid = 0;
 #ifdef HISTORY
     int bestMove = 0;
 #endif
@@ -87,12 +89,34 @@ int alphaBeta(char * board, int depth, int alpha, int beta, int color, struct be
     int indexCount = intCount(indexArray);
     
     for (i = 0; i < indexCount; i++) {
-        putPiece(board, indexArray[i], color);
+        if (!i) {
+            if (maxDepth > IterationDepth && depth == maxDepth) {
+                putPiece(board, firstMove, color);
+                currentIndex = firstMove;
+            }
+            else {
+                putPiece(board, indexArray[i], color);
+                currentIndex = indexArray[i];
+            }
+        }
+        else {
+            if (maxDepth > IterationDepth && depth == maxDepth) {
+                if (indexArray[i]  == firstMove)
+                    continue;
+                putPiece(board, indexArray[i], color);
+                currentIndex = indexArray[i];
+            }
+            else {
+                putPiece(board, indexArray[i], color);
+                currentIndex = indexArray[i];
+            }
+        }
         
 #ifdef Renju
         if (color == Black) {
-            if (checkForbidMove(board, indexArray[i])) {
-                takePiece(board, indexArray[i], color);
+            if (checkForbidMove(board, currentIndex)) {
+                takePiece(board, currentIndex, color);
+                foundForbid = 1;
                 continue;
             }
         }
@@ -117,35 +141,35 @@ int alphaBeta(char * board, int depth, int alpha, int beta, int color, struct be
         
         if (foundPV) {
             if (color == Black)
-                score = -alphaBeta(board, depth - 1, -alpha - 1, -alpha, White, &bestL, maxDepth);  //进行PVS
+                score = -alphaBeta(board, depth - 1, -alpha - 1, -alpha, White, &bestL, maxDepth, firstMove);  //进行PVS
             else
-                score = -alphaBeta(board, depth - 1, -alpha - 1, -alpha, Black, &bestL, maxDepth);
+                score = -alphaBeta(board, depth - 1, -alpha - 1, -alpha, Black, &bestL, maxDepth, firstMove);
             if (depth == 1)
                 score = -score;
             
             if (score > alpha && score < beta) {  //PVS失败
                 if (color == Black)
-                    score = -alphaBeta(board, depth - 1, -beta, -alpha, White, &bestL, maxDepth);
+                    score = -alphaBeta(board, depth - 1, -beta, -alpha, White, &bestL, maxDepth, firstMove);
                 else
-                    score = -alphaBeta(board, depth - 1, -beta, -alpha, Black, &bestL, maxDepth);
+                    score = -alphaBeta(board, depth - 1, -beta, -alpha, Black, &bestL, maxDepth, firstMove);
                 if (depth == 1)
                     score = -score;
             }
         }
         else {
             if (color == Black)
-                score = -alphaBeta(board, depth - 1, -beta, -alpha, White, &bestL, maxDepth);
+                score = -alphaBeta(board, depth - 1, -beta, -alpha, White, &bestL, maxDepth, firstMove);
             else
-                score = -alphaBeta(board, depth - 1, -beta, -alpha, Black, &bestL, maxDepth);
+                score = -alphaBeta(board, depth - 1, -beta, -alpha, Black, &bestL, maxDepth, firstMove);
             if (depth == 1)
                 score = -score;
         }
         
     someoneWin:
-        takePiece(board, indexArray[i], color);
+        takePiece(board, currentIndex, color);
 #ifdef Debug
         if (depth == maxDepth)
-            printf("%s = %d\n", transIndexToCoordinate(indexArray[i]), score);
+            printf("%s = %d\n", transIndexToCoordinate(currentIndex), score);
 #endif
         
         if (score >= beta) {
@@ -160,7 +184,7 @@ int alphaBeta(char * board, int depth, int alpha, int beta, int color, struct be
             zobristTable[indexInHash].score = score;
 #endif
 #ifdef HISTORY
-            historyTable[indexArray[i]] += depth * depth;
+            historyTable[currentIndex] += depth * depth;
 #endif
             free(indexArray);
             return beta;
@@ -169,7 +193,7 @@ int alphaBeta(char * board, int depth, int alpha, int beta, int color, struct be
             alpha = score;
             foundPV = 1;
 #ifdef HISTORY
-            bestMove = indexArray[i];
+            bestMove = currentIndex;
 #endif
 #ifdef HASH
             indexInHash = hashKey & hashIndex;
@@ -178,7 +202,7 @@ int alphaBeta(char * board, int depth, int alpha, int beta, int color, struct be
             zobristTable[indexInHash].depth = depth;
             zobristTable[indexInHash].score = score;
 #endif
-            bL -> indexes[0] = indexArray[i];
+            bL -> indexes[0] = currentIndex;
             memcpy(bL -> indexes + 1, bestL.indexes, sizeof(int) * (bestL.moves));
             bL -> moves = bestL.moves + 1;
             continue;
@@ -191,6 +215,9 @@ int alphaBeta(char * board, int depth, int alpha, int beta, int color, struct be
         zobristTable[indexInHash].score = score;
 #endif
     }
+    
+    if (indexArray[1] == -1 && foundForbid)
+        return -10000000;
     
 #ifdef HISTORY
     if (bestMove)
@@ -228,9 +255,9 @@ int search(char * board, int color) {
         for (j = 0; j < Depth; j++)
             bL -> indexes[j] = 0;
         if (i == IterationDepth)
-            bestScore = alphaBeta(boardToSearch, i, Alpha, Beta, color, bL, i);
+            bestScore = alphaBeta(boardToSearch, i, Alpha, Beta, color, bL, i, bests[0]);
         else
-            bestScore = alphaBeta(boardToSearch, i, Alpha, Beta, color, bL, i);
+            bestScore = alphaBeta(boardToSearch, i, Alpha, Beta, color, bL, i, bests[0]);
         for (j = 0; j < Depth; j++)
             bests[j] = bL -> indexes[j];
         

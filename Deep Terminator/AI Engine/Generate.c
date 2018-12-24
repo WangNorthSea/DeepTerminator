@@ -347,7 +347,7 @@ int getScoreForSort(int * selfPats, int * enemyPats) {
         enemyScore += enemyPats[i] * scoreForSort[i];
     }
     
-    return selfScore > enemyScore ? selfScore : enemyScore;
+    return selfScore + enemyScore / 2;
 }
 
 int * generateCAND(char * board, int color) {
@@ -417,7 +417,7 @@ restart:
         unsigned char enemyLiveFour = 0;
         for (i = 0; i < spaceCount; i++) {
             newPats = newPattern(board, spaceArray[i], color ^ 3);
-            if (newPats[LiveFour]) {
+            if (newPats[LiveFour] || newPats[RushFour]) {
                 enemyLiveFour++;
                 indexArray = append(indexArray, spaceArray[i]);
                 free(newPats);

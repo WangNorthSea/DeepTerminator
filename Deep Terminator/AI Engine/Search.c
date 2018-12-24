@@ -73,7 +73,7 @@ int alphaBeta(char * board, int depth, int alpha, int beta, int color, struct be
     int i;
     int score;
     int whoWin = 0;
-    int currentIndex = 0;
+    int tempIndex = 0;
     int foundPV = 0;
     unsigned char foundForbid = 0;
 #ifdef HISTORY
@@ -88,34 +88,23 @@ int alphaBeta(char * board, int depth, int alpha, int beta, int color, struct be
     int * indexArray =  generateCAND(board, color);
     int indexCount = intCount(indexArray);
     
+    if (maxDepth > IterationDepth && depth == maxDepth) {
+        for (i = 0; i < indexCount; i++) {
+            if (indexArray[i] == firstMove) {
+                tempIndex =  indexArray[0];
+                indexArray[0] = indexArray[i];
+                indexArray[i] = tempIndex;
+            }
+        }
+    }
+    
     for (i = 0; i < indexCount; i++) {
-        if (!i) {
-            if (maxDepth > IterationDepth && depth == maxDepth) {
-                putPiece(board, firstMove, color);
-                currentIndex = firstMove;
-            }
-            else {
-                putPiece(board, indexArray[i], color);
-                currentIndex = indexArray[i];
-            }
-        }
-        else {
-            if (maxDepth > IterationDepth && depth == maxDepth) {
-                if (indexArray[i]  == firstMove)
-                    continue;
-                putPiece(board, indexArray[i], color);
-                currentIndex = indexArray[i];
-            }
-            else {
-                putPiece(board, indexArray[i], color);
-                currentIndex = indexArray[i];
-            }
-        }
+        putPiece(board, indexArray[i], color);
         
 #ifdef Renju
         if (color == Black) {
-            if (checkForbidMove(board, currentIndex)) {
-                takePiece(board, currentIndex, color);
+            if (checkForbidMove(board, indexArray[i])) {
+                takePiece(board, indexArray[i], color);
                 foundForbid = 1;
                 continue;
             }
@@ -166,10 +155,10 @@ int alphaBeta(char * board, int depth, int alpha, int beta, int color, struct be
         }
         
     someoneWin:
-        takePiece(board, currentIndex, color);
+        takePiece(board, indexArray[i], color);
 #ifdef Debug
         if (depth == maxDepth)
-            printf("%s = %d\n", transIndexToCoordinate(currentIndex), score);
+            printf("%s = %d\n", transIndexToCoordinate(indexArray[i]), score);
 #endif
         
         if (score >= beta) {
@@ -184,7 +173,7 @@ int alphaBeta(char * board, int depth, int alpha, int beta, int color, struct be
             zobristTable[indexInHash].score = score;
 #endif
 #ifdef HISTORY
-            historyTable[currentIndex] += depth * depth;
+            historyTable[indexArray[i]] += depth * depth;
 #endif
             free(indexArray);
             return beta;
@@ -193,7 +182,7 @@ int alphaBeta(char * board, int depth, int alpha, int beta, int color, struct be
             alpha = score;
             foundPV = 1;
 #ifdef HISTORY
-            bestMove = currentIndex;
+            bestMove = indexArray[i];
 #endif
 #ifdef HASH
             indexInHash = hashKey & hashIndex;
@@ -202,7 +191,7 @@ int alphaBeta(char * board, int depth, int alpha, int beta, int color, struct be
             zobristTable[indexInHash].depth = depth;
             zobristTable[indexInHash].score = score;
 #endif
-            bL -> indexes[0] = currentIndex;
+            bL -> indexes[0] = indexArray[i];
             memcpy(bL -> indexes + 1, bestL.indexes, sizeof(int) * (bestL.moves));
             bL -> moves = bestL.moves + 1;
             continue;
@@ -216,8 +205,10 @@ int alphaBeta(char * board, int depth, int alpha, int beta, int color, struct be
 #endif
     }
     
-    if (indexArray[1] == -1 && foundForbid)
+    if (indexArray[1] == -1 && foundForbid) {
+        free(indexArray);
         return -10000000;
+    }
     
 #ifdef HISTORY
     if (bestMove)

@@ -25,5 +25,6 @@ struct situation {
 extern unsigned long long int hashKey;
 extern struct situation zobristTable[hashSize];
 extern unsigned long long int zobristMap[225][2];
+extern const unsigned long hashVal[4096];
 
 #endif /* zobrist_h */

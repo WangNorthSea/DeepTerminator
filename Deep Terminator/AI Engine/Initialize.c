@@ -93,18 +93,14 @@ void initHash(void) {
     unsigned long long int a, b;
     
     for (i = 0; i < 225; i++) {
-        srand((unsigned int)clock());
-        a = rand();
-        srand((unsigned int)clock());
-        b = rand();
+        a = hashVal[i];
+        b = hashVal[i + 225];
         zobristMap[i][0] = (a << 32) | b;
     }
     
     for (i = 0; i < 225; i++) {
-        srand((unsigned int)clock());
-        a = rand();
-        srand((unsigned int)clock());
-        b = rand();
+        a = hashVal[i + 450];
+        b = hashVal[i + 675];
         zobristMap[i][1] = (a << 32) | b;
     }
     

@@ -36,27 +36,42 @@ int historyTable[225];
 
 int alphaBeta(char * board, int depth, int alpha, int beta, int color, struct bestLine * bL, int maxDepth, int firstMove) {
 #ifdef HASH
-    int indexInHash = hashKey & hashIndex;
-    if (zobristTable[indexInHash].key == hashKey) {
-        if (zobristTable[indexInHash].depth == depth) {
+    int indexInHash;
+    if (depth < maxDepth) {
+        indexInHash = hashKey & hashIndex;
+        if (zobristTable[indexInHash].key == hashKey) {
+            if (zobristTable[indexInHash].depth == depth) {
 #ifdef Debug
-            hashHit++;
+                hashHit++;
 #endif
-            if (zobristTable[indexInHash].kind == betaNode) {
-                if (zobristTable[indexInHash].score >= beta)
-                    return zobristTable[indexInHash].score;
+                if (zobristTable[indexInHash].kind == betaNode) {
+                    if (zobristTable[indexInHash].score >= beta)
+                        return beta;
+                }
+                else if (zobristTable[indexInHash].kind == alphaNode) {
+                    if (zobristTable[indexInHash].score <= alpha)
+                        return alpha;
+                }
+                else if (zobristTable[indexInHash].kind == PVNode) {
+                    if (zobristTable[indexInHash].score < beta && zobristTable[indexInHash].score > alpha)
+                        return zobristTable[indexInHash].score;
+                }
             }
-            else if (zobristTable[indexInHash].kind == alphaNode) {
-                if (zobristTable[indexInHash].score <= alpha)
-                    return zobristTable[indexInHash].score;
-            }
-            else if (zobristTable[indexInHash].kind == PVNode) {
-                if (zobristTable[indexInHash].score > alpha && zobristTable[indexInHash].score < beta)
-                    return zobristTable[indexInHash].score;
+            else if (zobristTable[indexInHash].kind == overNode && depth < maxDepth) {
+                if (zobristTable[indexInHash].score == 10000000) {
+                    if  (beta == 99999999)
+                        return zobristTable[indexInHash].score;
+                    else
+                        return beta;
+                }
+                else {
+                    if (alpha == -99999999)
+                        return zobristTable[indexInHash].score;
+                    else
+                        return alpha;
+                }
             }
         }
-        else if (zobristTable[indexInHash].kind == overNode)
-            return zobristTable[indexInHash].score;
     }
 #endif
     if (depth == 0) {
@@ -76,6 +91,9 @@ int alphaBeta(char * board, int depth, int alpha, int beta, int color, struct be
     int tempIndex = 0;
     int foundPV = 0;
     unsigned char foundForbid = 0;
+#ifdef HASH
+    int maxValue = -99999999;
+#endif
 #ifdef HISTORY
     int bestMove = 0;
 #endif
@@ -118,13 +136,6 @@ int alphaBeta(char * board, int depth, int alpha, int beta, int color, struct be
                 score = 10000000;
             else
                 score = -10000000;
-#ifdef HASH
-            indexInHash = hashKey & hashIndex;
-            zobristTable[indexInHash].key = hashKey;
-            zobristTable[indexInHash].kind = overNode;
-            zobristTable[indexInHash].depth = 100;
-            zobristTable[indexInHash].score = score;
-#endif
             goto someoneWin;
         }
         
@@ -156,6 +167,7 @@ int alphaBeta(char * board, int depth, int alpha, int beta, int color, struct be
         
     someoneWin:
         takePiece(board, indexArray[i], color);
+        
 #ifdef Debug
         if (depth == maxDepth)
             printf("%s = %d\n", transIndexToCoordinate(indexArray[i]), score);
@@ -168,7 +180,10 @@ int alphaBeta(char * board, int depth, int alpha, int beta, int color, struct be
 #ifdef HASH
             indexInHash = hashKey & hashIndex;
             zobristTable[indexInHash].key = hashKey;
-            zobristTable[indexInHash].kind = betaNode;
+            if (score == 10000000)
+                zobristTable[indexInHash].kind = overNode;
+            else
+                zobristTable[indexInHash].kind = betaNode;
             zobristTable[indexInHash].depth = depth;
             zobristTable[indexInHash].score = score;
 #endif
@@ -184,24 +199,13 @@ int alphaBeta(char * board, int depth, int alpha, int beta, int color, struct be
 #ifdef HISTORY
             bestMove = indexArray[i];
 #endif
-#ifdef HASH
-            indexInHash = hashKey & hashIndex;
-            zobristTable[indexInHash].key = hashKey;
-            zobristTable[indexInHash].kind = PVNode;
-            zobristTable[indexInHash].depth = depth;
-            zobristTable[indexInHash].score = score;
-#endif
             bL -> indexes[0] = indexArray[i];
             memcpy(bL -> indexes + 1, bestL.indexes, sizeof(int) * (bestL.moves));
             bL -> moves = bestL.moves + 1;
-            continue;
         }
 #ifdef HASH
-        indexInHash = hashKey & hashIndex;
-        zobristTable[indexInHash].key = hashKey;
-        zobristTable[indexInHash].kind = alphaNode;
-        zobristTable[indexInHash].depth = depth;
-        zobristTable[indexInHash].score = score;
+        if (maxValue < score)
+            maxValue = score;
 #endif
     }
     
@@ -209,6 +213,28 @@ int alphaBeta(char * board, int depth, int alpha, int beta, int color, struct be
         free(indexArray);
         return -10000000;
     }
+    
+#ifdef HASH
+    indexInHash = hashKey & hashIndex;
+    if (maxValue == -10000000 || maxValue == 10000000) {
+        zobristTable[indexInHash].key = hashKey;
+        zobristTable[indexInHash].kind = overNode;
+        zobristTable[indexInHash].depth = 100;
+        zobristTable[indexInHash].score = maxValue;
+    }
+    else if (foundPV) {
+        zobristTable[indexInHash].key = hashKey;
+        zobristTable[indexInHash].kind = PVNode;
+        zobristTable[indexInHash].depth = depth;
+        zobristTable[indexInHash].score = maxValue;
+    }
+    else {
+        zobristTable[indexInHash].key = hashKey;
+        zobristTable[indexInHash].kind = alphaNode;
+        zobristTable[indexInHash].depth = depth;
+        zobristTable[indexInHash].score = maxValue;
+    }
+#endif
     
 #ifdef HISTORY
     if (bestMove)

@@ -60,15 +60,15 @@ int alphaBeta(char * board, int depth, int alpha, int beta, int color, struct be
             else if (zobristTable[indexInHash].kind == overNode && depth < maxDepth) {
                 if (zobristTable[indexInHash].score == 10000000) {
                     if  (beta == 99999999)
-                        return zobristTable[indexInHash].score;
+                        return depth == 0 ? -zobristTable[indexInHash].score : zobristTable[indexInHash].score;
                     else
-                        return beta;
+                        return depth == 0 ? -10000000 : beta;
                 }
                 else {
                     if (alpha == -99999999)
-                        return zobristTable[indexInHash].score;
+                        return depth == 0 ? -zobristTable[indexInHash].score : zobristTable[indexInHash].score;
                     else
-                        return alpha;
+                        return depth == 0 ? 10000000 : alpha;
                 }
             }
         }

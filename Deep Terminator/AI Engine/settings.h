@@ -20,7 +20,7 @@
 #define Beta 99999999        //beta初值
 #define ChildNodes 20     //最大子节点数
 #define IterationDepth 2  //迭代加深起始深度
-#define hashSize 1048576   //置换表大小，应取2的幂次，内存占用为14 * hashSize个字节
-#define hashIndex 1048575  //应为hashSize - 1，让hashKey & hashIndex即为当前局面应在置换表中的位置
+#define hashSize 16777216   //置换表大小，应取2的幂次，内存占用为14 * hashSize个字节
+#define hashIndex 16777215  //应为hashSize - 1，让hashKey & hashIndex即为当前局面应在置换表中的位置
 
 #endif /* settings_h */

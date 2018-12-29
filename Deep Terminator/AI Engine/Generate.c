@@ -322,12 +322,20 @@ void quickSort(int * Array, int len, int * indexArray, int descend) {
 }
 
 void newPattern(char * board, int index) {
-    int i;
-    for (i = 0; i < 4; i++)
-        candidates[index].pat[0][patMap[getPatternCode(board, index, i) ^ (Black << 10)] & 15]++;
-    for (i = 0; i < 4; i++)
-        candidates[index].pat[1][patMap[getPatternCode(board, index, i) ^ (White << 10)] >> 4]++;
+    int pcode0 = getPatternCode(board, index, 0);
+    int pcode1 = getPatternCode(board, index, 1);
+    int pcode2 = getPatternCode(board, index, 2);
+    int pcode3 = getPatternCode(board, index, 3);
     
+    candidates[index].pat[0][patMap[pcode0 ^ (Black << 10)] & 15]++;
+    candidates[index].pat[0][patMap[pcode1 ^ (Black << 10)] & 15]++;
+    candidates[index].pat[0][patMap[pcode2 ^ (Black << 10)] & 15]++;
+    candidates[index].pat[0][patMap[pcode3 ^ (Black << 10)] & 15]++;
+    
+    candidates[index].pat[1][patMap[pcode0 ^ (White << 10)] >> 4]++;
+    candidates[index].pat[1][patMap[pcode1 ^ (White << 10)] >> 4]++;
+    candidates[index].pat[1][patMap[pcode2 ^ (White << 10)] >> 4]++;
+    candidates[index].pat[1][patMap[pcode3 ^ (White << 10)] >> 4]++;
 }
 
 void clearPattern(int pat[2][10]) {
@@ -360,7 +368,7 @@ int getScoreForSort(int index, int color) {
     
     for (i = 0; i < 9; i++) {
         selfScore += candidates[index].pat[color - 1][i] * scoreForSort[i];
-        enemyScore += candidates[index].pat[color ^ 3 - 1][i] * scoreForSort[i];
+        enemyScore += candidates[index].pat[(color ^ 3) - 1][i] * scoreForSort[i];
     }
     
     return selfScore + enemyScore / 2;
@@ -392,7 +400,7 @@ restart:
     }
     else if (patCurrent.pat[(color ^ 3) - 1][RushFour] || patCurrent.pat[(color ^ 3) - 1][LiveFour]) {
         for (i = 0; i < spaceCount; i++) {
-            if (candidates[cands[i]].pat[color ^ 3 - 1][Five]) {
+            if (candidates[cands[i]].pat[(color ^ 3) - 1][Five]) {
                 indexArray = append(indexArray, cands[i]);
                 break;
             }
@@ -420,10 +428,10 @@ restart:
         }
     }
     else if (patCurrent.pat[(color ^ 3) - 1][LiveThree]) {
-        unsigned char enemyLiveFour = 0;
+        unsigned char enemyFour = 0;
         for (i = 0; i < spaceCount; i++) {
-            if (candidates[cands[i]].pat[color ^ 3 - 1][LiveFour] || candidates[cands[i]].pat[color ^ 3 - 1][RushFour]) {
-                enemyLiveFour++;
+            if (candidates[cands[i]].pat[(color ^ 3) - 1][LiveFour] || candidates[cands[i]].pat[(color ^ 3) - 1][RushFour]) {
+                enemyFour++;
                 indexArray = append(indexArray, cands[i]);
                 continue;
             }
@@ -434,7 +442,7 @@ restart:
             }
         }
         
-        if (!enemyLiveFour) {
+        if (!enemyFour) {
             patCurrent.pat[(color ^ 3) - 1][LiveThree] = 0;
             patHistory[moveCount] = patCurrent;
             indexArray[0] = -1;

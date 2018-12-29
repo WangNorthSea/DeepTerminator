@@ -9,6 +9,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <memory.h>
+#include <time.h>
 #include "settings.h"
 #include "board.h"
 #include "array.h"
@@ -30,6 +31,9 @@ struct bestLine {
     int moves;
     int indexes[Depth];
 };
+
+time_t terminateTime;
+unsigned char terminate = 0;
 
 #ifdef HISTORY
 int historyTable[225];
@@ -81,6 +85,10 @@ int alphaBeta(char * board, int depth, int alpha, int beta, int color, struct be
 #ifdef Debug
         evaNodes++;
 #endif
+        
+        if (terminateTime - time(NULL) <= 1)
+            terminate = 1;
+        
         bL -> moves = 0;
         if (color == Black)
             return evaluate(White);
@@ -141,7 +149,17 @@ int alphaBeta(char * board, int depth, int alpha, int beta, int color, struct be
     }
 #endif
     
+    if (depth == maxDepth) {
+        bL -> indexes[0] = indexArray[0];
+        memcpy(bL -> indexes + 1, bestL.indexes, sizeof(int) * (bestL.moves));
+        bL -> moves = bestL.moves + 1;
+    }
+    
     for (i = 0; i < indexCount; i++) {
+        
+        if (terminate)
+            break;
+        
         putPiece(board, indexArray[i], color);
         
 #ifdef Renju
@@ -192,6 +210,9 @@ int alphaBeta(char * board, int depth, int alpha, int beta, int color, struct be
         
     someoneWin:
         takePiece(board, indexArray[i], color);
+        
+        if (score == Alpha || score == Beta)
+            score = alpha;
         
 #ifdef Debug
         if (depth == maxDepth)
@@ -296,6 +317,9 @@ int search(char * board, int color) {
     int bests[Depth] = {0};
     struct bestLine * bL = NULL;
     
+    terminateTime = time(NULL) + timeLimit;
+    terminate = 0;
+    
     for (i = 0; i < 225; i++)
         boardToSearch[i] = board[i];
     
@@ -333,6 +357,9 @@ int search(char * board, int color) {
         printf("\n");
 #endif
         if (bestScore >= 10000000 || bestScore <= -10000000)
+            break;
+        
+        if (terminate)
             break;
             
         if (i < Depth) {

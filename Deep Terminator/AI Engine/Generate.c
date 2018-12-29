@@ -30,16 +30,17 @@ int scoreForSort[9] = {
 
 int min(int a, int b) { return (a - b <= 0) ? a : b; }
 
-int * findSpace(char * board) {
+int * findSpace(char * board, unsigned char narrowed) {
     int i, j, k;
     int * indexArray = (int *)malloc(sizeof(int));
     indexArray[0] = -1;
+    int scale = narrowed ? radius - 1 : radius;
     
     for (i = 0; i < 225; i++) {
         if ((board[i] == White) || (board[i] == Black)) {
             
-            if (i % 15 < radius) {
-                for (j = 1; j <= radius; j++) {
+            if (i % 15 < scale) {
+                for (j = 1; j <= scale; j++) {
                     if (j <= (i % 15)) {
                         if ((board[i - j] == White) || (board[i - j] == Black)) { continue; }
                         for (k = 0; k < intCount(indexArray); k++) {
@@ -52,7 +53,7 @@ int * findSpace(char * board) {
                 }
             }
             else {
-                for (j = 1; j <= radius; j++) {
+                for (j = 1; j <= scale; j++) {
                     if ((board[i - j] == White) || (board[i - j] == Black)) { continue; }
                     for (k = 0; k < intCount(indexArray); k++) {
                         if (indexArray[k] == (i - j)) { break; }
@@ -63,8 +64,8 @@ int * findSpace(char * board) {
                 }
             }
             
-            if (14 - (i % 15) < radius) {
-                for (j = 1; j <= radius; j++) {
+            if (14 - (i % 15) < scale) {
+                for (j = 1; j <= scale; j++) {
                     if (j <= (14 - (i % 15))) {
                         if ((board[i + j] == White) || (board[i + j] == Black)) { continue; }
                         for (k = 0; k < intCount(indexArray); k++) {
@@ -77,7 +78,7 @@ int * findSpace(char * board) {
                 }
             }
             else {
-                for (j = 1; j <= radius; j++) {
+                for (j = 1; j <= scale; j++) {
                     if ((board[i + j] == White) || (board[i + j] == Black)) { continue; }
                     for (k = 0; k < intCount(indexArray); k++) {
                         if (indexArray[k] == (i + j)) { break; }
@@ -88,8 +89,8 @@ int * findSpace(char * board) {
                 }
             }
             
-            if (i / 15 < radius) {
-                for (j = 1; j <= radius; j++) {
+            if (i / 15 < scale) {
+                for (j = 1; j <= scale; j++) {
                     if (j <= (i / 15)) {
                         if ((board[i - j * 15] == White) || (board[i - j * 15] == Black)) { continue; }
                         for (k = 0; k < intCount(indexArray); k++) {
@@ -102,7 +103,7 @@ int * findSpace(char * board) {
                 }
             }
             else {
-                for (j = 1; j <= radius; j++) {
+                for (j = 1; j <= scale; j++) {
                     if ((board[i - j * 15] == White) || (board[i - j * 15] == Black)) { continue; }
                     for (k = 0; k < intCount(indexArray); k++) {
                         if (indexArray[k] == (i - j * 15)) { break; }
@@ -113,8 +114,8 @@ int * findSpace(char * board) {
                 }
             }
             
-            if (14 - i / 15 < radius) {
-                for (j = 1; j <= radius; j++) {
+            if (14 - i / 15 < scale) {
+                for (j = 1; j <= scale; j++) {
                     if (j <= (14 - i / 15)) {
                         if ((board[i + j * 15] == White) || (board[i + j * 15] == Black)) { continue; }
                         for (k = 0; k < intCount(indexArray); k++) {
@@ -127,7 +128,7 @@ int * findSpace(char * board) {
                 }
             }
             else {
-                for (j = 1; j <= radius; j++) {
+                for (j = 1; j <= scale; j++) {
                     if ((board[i + j * 15] == White) || (board[i + j * 15] == Black)) { continue; }
                     for (k = 0; k < intCount(indexArray); k++) {
                         if (indexArray[k] == (i + j * 15)) { break; }
@@ -138,8 +139,8 @@ int * findSpace(char * board) {
                 }
             }
             
-            if (min(i % 15, i / 15) < radius) {
-                for (j = 1; j <= radius; j++) {
+            if (min(i % 15, i / 15) < scale) {
+                for (j = 1; j <= scale; j++) {
                     if (j <= min(i % 15, i / 15)) {
                         if ((board[i - j * 16] == White) || (board[i - j * 16] == Black)) { continue; }
                         for (k = 0; k < intCount(indexArray); k++) {
@@ -152,7 +153,7 @@ int * findSpace(char * board) {
                 }
             }
             else {
-                for (j = 1; j <= radius; j++) {
+                for (j = 1; j <= scale; j++) {
                     if ((board[i - j * 16] == White) || (board[i - j * 16] == Black)) { continue; }
                     for (k = 0; k < intCount(indexArray); k++) {
                         if (indexArray[k] == (i - j * 16)) { break; }
@@ -163,8 +164,8 @@ int * findSpace(char * board) {
                 }
             }
             
-            if (min(14 - (i % 15), 14 - i / 15) < radius) {
-                for (j = 1; j <= radius; j++) {
+            if (min(14 - (i % 15), 14 - i / 15) < scale) {
+                for (j = 1; j <= scale; j++) {
                     if (j <= min(14 - (i % 15), 14 - i / 15)) {
                         if ((board[i + j * 16] == White) || (board[i + j * 16] == Black)) { continue; }
                         for (k = 0; k < intCount(indexArray); k++) {
@@ -177,7 +178,7 @@ int * findSpace(char * board) {
                 }
             }
             else {
-                for (j = 1; j <= radius; j++) {
+                for (j = 1; j <= scale; j++) {
                     if ((board[i + j * 16] == White) || (board[i + j * 16] == Black)) { continue; }
                     for (k = 0; k < intCount(indexArray); k++) {
                         if (indexArray[k] == (i + j * 16)) { break; }
@@ -188,8 +189,8 @@ int * findSpace(char * board) {
                 }
             }
             
-            if (min(14 - (i % 15), i / 15) < radius) {
-                for (j = 1; j <= radius; j++) {
+            if (min(14 - (i % 15), i / 15) < scale) {
+                for (j = 1; j <= scale; j++) {
                     if (j <= min(14 - (i % 15), i / 15)) {
                         if ((board[i - j * 14] == White) || (board[i - j * 14] == Black)) { continue; }
                         for (k = 0; k < intCount(indexArray); k++) {
@@ -202,7 +203,7 @@ int * findSpace(char * board) {
                 }
             }
             else {
-                for (j = 1; j <= radius; j++) {
+                for (j = 1; j <= scale; j++) {
                     if ((board[i - j * 14] == White) || (board[i - j * 14] == Black)) { continue; }
                     for (k = 0; k < intCount(indexArray); k++) {
                         if (indexArray[k] == (i - j * 14)) { break; }
@@ -213,8 +214,8 @@ int * findSpace(char * board) {
                 }
             }
             
-            if (min(i % 15, 14 - i / 15) < radius) {
-                for (j = 1; j <= radius; j++) {
+            if (min(i % 15, 14 - i / 15) < scale) {
+                for (j = 1; j <= scale; j++) {
                     if (j <= min(i % 15, 14 - i / 15)) {
                         if ((board[i + j * 14] == White) || (board[i + j * 14] == Black)) { continue; }
                         for (k = 0; k < intCount(indexArray); k++) {
@@ -227,7 +228,7 @@ int * findSpace(char * board) {
                 }
             }
             else {
-                for (j = 1; j <= radius; j++) {
+                for (j = 1; j <= scale; j++) {
                     if ((board[i + j * 14] == White) || (board[i + j * 14] == Black)) { continue; }
                     for (k = 0; k < intCount(indexArray); k++) {
                         if (indexArray[k] == (i + j * 14)) { break; }
@@ -346,9 +347,9 @@ void clearPattern(int pat[2][10]) {
     }
 }
 
-int * refreshCandidates(char * board) {
+int * refreshCandidates(char * board, unsigned char narrowed) {
     int i;
-    int * indexArray = findSpace(board);
+    int * indexArray = findSpace(board, narrowed);
     int spaceCount = intCount(indexArray);
     
     for (i = 0; i < spaceCount; i++) {
@@ -374,9 +375,9 @@ int getScoreForSort(int index, int color) {
     return selfScore + enemyScore / 2;
 }
 
-int * generateCAND(char * board, int color) {
+int * generateCAND(char * board, int color, unsigned char narrowed) {
     int i;
-    int * cands = refreshCandidates(board);
+    int * cands = refreshCandidates(board, narrowed);
     int spaceCount = intCount(cands);
     int * indexArray = (int *)malloc(sizeof(int));
     indexArray[0] = -1;

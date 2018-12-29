@@ -114,7 +114,11 @@ int alphaBeta(char * board, int depth, int alpha, int beta, int color, struct be
     for (i = 0; i < Depth; i++)
         bestL.indexes[i] = 0;
     
-    int * indexArray =  generateCAND(board, color);
+    int * indexArray;
+    if (depth < maxDepth)
+        indexArray = generateCAND(board, color, 1);
+    else
+        indexArray = generateCAND(board, color, 0);
     int indexCount = intCount(indexArray);
     
     if (maxDepth > IterationDepth && depth == maxDepth) {

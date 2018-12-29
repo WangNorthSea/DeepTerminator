@@ -12,6 +12,7 @@
 #ifdef Debug
 extern int evaNodes;
 extern int hashHit;
+extern int killerHit;
 #endif
 
 #endif /* main_h */

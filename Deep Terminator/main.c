@@ -22,6 +22,7 @@
 #ifdef Debug
 int evaNodes = 0;
 int hashHit = 0;
+int killerHit = 0;
 #endif
 
 void printPats(void) {
@@ -72,9 +73,11 @@ int main(void) {
             printf("evaluated nodes = %d\n", evaNodes);
             printf("alphaBeta cut = %d\n", cut);
             printf("hashHit = %d\n", hashHit);
+            printf("killerHit = %d\n", killerHit);
             hashHit = 0;
             evaNodes = 0;
             cut = 0;
+            killerHit = 0;
 #endif
             
             whoWin = checkWhoWin();

@@ -12,6 +12,7 @@
 #include "settings.h"
 #include "patterns.h"
 #include "zobrist.h"
+#include "killer.h"
 
 unsigned char patMap[1 << 22];
 
@@ -113,6 +114,16 @@ void initHash(void) {
 }
 #endif
 
+#ifdef KILLER
+void initKiller(void) {
+    int i;
+    for (i = 0; i < hashSize; i++) {
+        killer[i].key = 0;
+        killer[i].index = 0;
+    }
+}
+#endif
+
 void init(void) {
     int i, j, k;
     for (i = 0; i < 225; i++)
@@ -144,5 +155,9 @@ void init(void) {
     initPatMap();
 #ifdef HASH
     initHash();
+#endif
+    
+#ifdef KILLER
+    initKiller();
 #endif
 }

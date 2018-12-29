@@ -18,6 +18,7 @@
 #include "renju.h"
 #include "evaluate.h"
 #include "zobrist.h"
+#include "killer.h"
 #include "/Users/haoyuwang/Desktop/Deep Terminator/Deep Terminator/IO interface/trans.h"
 #include "/Users/haoyuwang/Desktop/Deep Terminator/Deep Terminator/main.h"
 
@@ -36,9 +37,8 @@ int historyTable[225];
 
 int alphaBeta(char * board, int depth, int alpha, int beta, int color, struct bestLine * bL, int maxDepth, int firstMove) {
 #ifdef HASH
-    int indexInHash;
+    int indexInHash = hashKey & hashIndex;
     if (depth < maxDepth) {
-        indexInHash = hashKey & hashIndex;
         if (zobristTable[indexInHash].key == hashKey) {
             if (zobristTable[indexInHash].depth == depth) { //depth == 0时置换表不写入，所以depth == 0时不会命中overNode以外的的局面
 #ifdef Debug
@@ -119,6 +119,28 @@ int alphaBeta(char * board, int depth, int alpha, int beta, int color, struct be
         }
     }
     
+#ifdef KILLER
+    if (depth < maxDepth) {
+        if (killer[indexInHash].key == hashKey) {
+            for (i = 0; i < indexCount; i++) {
+                if (indexArray[i] == killer[indexInHash].index) {
+#ifdef Debug
+                    killerHit++;
+#endif
+                    int j = i;
+                    while (j > 0) {
+                        tempIndex = indexArray[j];
+                        indexArray[j] = indexArray[j - 1];
+                        indexArray[j - 1] = tempIndex;
+                        j--;
+                    }
+                    break;
+                }
+            }
+        }
+    }
+#endif
+    
     for (i = 0; i < indexCount; i++) {
         putPiece(board, indexArray[i], color);
         
@@ -181,7 +203,6 @@ int alphaBeta(char * board, int depth, int alpha, int beta, int color, struct be
             cut++;
 #endif
 #ifdef HASH
-            indexInHash = hashKey & hashIndex;
             zobristTable[indexInHash].key = hashKey;
             if (score == 10000000)
                 zobristTable[indexInHash].kind = overNode;
@@ -190,6 +211,12 @@ int alphaBeta(char * board, int depth, int alpha, int beta, int color, struct be
             zobristTable[indexInHash].depth = depth;
             zobristTable[indexInHash].score = score;
 #endif
+            
+#ifdef KILLER
+            killer[indexInHash].key = hashKey;
+            killer[indexInHash].index = indexArray[i];
+#endif
+            
 #ifdef HISTORY
             historyTable[indexArray[i]] += depth * depth;
 #endif
@@ -218,7 +245,6 @@ int alphaBeta(char * board, int depth, int alpha, int beta, int color, struct be
     }
     
 #ifdef HASH
-    indexInHash = hashKey & hashIndex;
     if (maxValue == -10000000 || maxValue == 10000000) {
         zobristTable[indexInHash].key = hashKey;
         zobristTable[indexInHash].kind = overNode;
@@ -236,6 +262,13 @@ int alphaBeta(char * board, int depth, int alpha, int beta, int color, struct be
         zobristTable[indexInHash].kind = alphaNode;
         zobristTable[indexInHash].depth = depth;
         zobristTable[indexInHash].score = maxValue;
+        
+#ifdef KILLER
+        if (killer[indexInHash].key == hashKey) {
+            killer[indexInHash].key = 0;
+            killer[indexInHash].index = 0;
+        }
+#endif
     }
 #endif
     
@@ -307,6 +340,7 @@ int search(char * board, int color) {
             hashHit = 0;
             evaNodes = 0;
             cut = 0;
+            killerHit = 0;
 #endif
             free(bL);
         }

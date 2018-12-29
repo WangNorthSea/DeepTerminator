@@ -9,9 +9,10 @@
 #ifndef settings_h
 #define settings_h
 
-#define Debug     //debug模式，若需关闭debug模式请注释本行
-#define HASH      //启用置换表，若需关闭置换表请注释本行
-#define HISTORY   //启用历史表，若需关闭历史表请注释本行
+#define Debug     //debug模式，若需关闭请注释本行
+#define HASH      //启用置换表，若需关闭请注释本行
+#define HISTORY   //启用历史表，若需关闭请注释本行
+#define KILLER    //启用杀手走法启发，若需关闭请注释本行，只有启用置换表才可启用杀手走法启发
 #define Renju     //禁手模式，若需采用无禁手模式请注释本行
 
 #define radius 3          //落点生成半径

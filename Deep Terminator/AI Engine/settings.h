@@ -16,8 +16,8 @@
 
 #define radius 3          //落点生成半径
 #define Depth 8           //搜索深度
-#define Alpha -99999999      //alpha初值
-#define Beta 99999999        //beta初值
+#define Alpha -99999999   //alpha初值
+#define Beta 99999999     //beta初值
 #define ChildNodes 20     //最大子节点数
 #define IterationDepth 2  //迭代加深起始深度
 #define hashSize 16777216   //置换表大小，应取2的幂次，内存占用为14 * hashSize个字节

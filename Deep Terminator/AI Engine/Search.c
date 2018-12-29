@@ -40,7 +40,7 @@ int alphaBeta(char * board, int depth, int alpha, int beta, int color, struct be
     if (depth < maxDepth) {
         indexInHash = hashKey & hashIndex;
         if (zobristTable[indexInHash].key == hashKey) {
-            if (zobristTable[indexInHash].depth == depth) {
+            if (zobristTable[indexInHash].depth == depth) { //depth == 0时置换表不写入，所以depth == 0时不会命中overNode以外的的局面
 #ifdef Debug
                 hashHit++;
 #endif
@@ -58,15 +58,18 @@ int alphaBeta(char * board, int depth, int alpha, int beta, int color, struct be
                 }
             }
             else if (zobristTable[indexInHash].kind == overNode && depth < maxDepth) {
+#ifdef Debug
+                hashHit++;
+#endif
                 if (zobristTable[indexInHash].score == 10000000) {
-                    if  (beta == 99999999)
-                        return depth == 0 ? -zobristTable[indexInHash].score : zobristTable[indexInHash].score;
+                    if  (beta == Beta)
+                        return depth == 0 ? -10000000 : 10000000;
                     else
                         return depth == 0 ? -10000000 : beta;
                 }
                 else {
-                    if (alpha == -99999999)
-                        return depth == 0 ? -zobristTable[indexInHash].score : zobristTable[indexInHash].score;
+                    if (alpha == Alpha)
+                        return depth == 0 ? 10000000 : -10000000;
                     else
                         return depth == 0 ? 10000000 : alpha;
                 }
@@ -267,6 +270,9 @@ int search(char * board, int color) {
     initHistoryTable();
 #endif
     for (i = IterationDepth; i <= Depth; i++) {
+        for (j = 0; j < 225; j++)
+            refreshed[j] = 0;
+        
         bL = (struct bestLine *)malloc(sizeof(struct bestLine));
         bL -> moves = 0;
         for (j = 0; j < Depth; j++)

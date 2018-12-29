@@ -19,11 +19,17 @@ struct pattern {
     int pat[2][10];   //第一个下标0代表黑子棋型，1代表白子棋型
 };
 
+struct candPoint {
+    int pat[2][10];
+};
+
 extern char board[225];
 extern int * pos;
 extern unsigned short int moveCount;
 extern struct pattern patCurrent;
 extern struct pattern patHistory[256];
+extern unsigned char refreshed[225];
+extern struct candPoint candidates[225];
 
 extern unsigned int getPatternCode(char * board, int index, int direction);
 extern void putPiece(char * board, int index, int color);

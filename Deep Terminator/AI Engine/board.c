@@ -24,9 +24,15 @@ struct pattern {
     int pat[2][10];   //第一个下标0代表黑子棋型，1代表白子棋型
 };
 
+struct candPoint {
+    int pat[2][10];
+};
+
 unsigned short int moveCount = 0;
 struct pattern patCurrent;
 struct pattern patHistory[256];
+unsigned char refreshed[225];
+struct candPoint candidates[225];
 
 int minimum(int a, int b) {
     return a - b < 0 ? a : b;
@@ -87,6 +93,37 @@ unsigned int getPatternCode(char * board, int index, int direction) {
     return pcode;
 }
 
+void markFalse(int index) {
+    int i;
+    int leftLimit = -(index % 15);
+    int rightLimit = 14 + leftLimit;
+    for (i = 5; i >= -5; i--) {
+        if (i >= leftLimit && i <= rightLimit && i != 0)
+            refreshed[index + i] = 0;
+    }
+    
+    int upLimit = -(index / 15);
+    int downLimit = 14 + upLimit;
+    for (i = 5; i >= -5; i--) {
+        if (i >= upLimit && i <= downLimit && i != 0)
+            refreshed[index + 15 * i] = 0;
+    }
+    
+    int sixteenUpLimit = -minimum(index % 15, index / 15);
+    int sixteenDownLimit = minimum(14 - index % 15, 14 - index / 15);
+    for (i = 5; i >= -5; i--) {
+        if (i >= sixteenUpLimit && i <= sixteenDownLimit && i != 0)
+            refreshed[index + 16 * i] = 0;
+    }
+    
+    int fourteenUpLimit = -minimum(14 - index % 15, index / 15);
+    int fourteenDownLimit = minimum(index % 15, 14 - index / 15);
+    for (i = 5; i >= -5; i--) {
+        if (i >= fourteenUpLimit && i <= fourteenDownLimit && i != 0)
+            refreshed[index + 14 * i] = 0;
+    }
+}
+
 //落子时正常调用即可，即时改变局面双方棋型
 void putPiece(char * board, int index, int color) {
 #ifdef HASH
@@ -107,6 +144,8 @@ void putPiece(char * board, int index, int color) {
         patCurrent.pat[0][pats[i] & 15]--;
         patCurrent.pat[1][pats[i] >> 4]--;
     }
+    
+    markFalse(index);
     
     board[index] = color;
     pats2[0] = patMap[getPatternCode(board, index, 0)];
@@ -165,6 +204,9 @@ void takePiece(char * board, int index, int color) {
 #ifdef HASH
     hashKey ^= zobristMap[index][color - 1];
 #endif
+    
+    markFalse(index);
+    
     moveCount--;
     board[index] = Empty;
     patCurrent = patHistory[moveCount];

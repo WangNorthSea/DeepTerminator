@@ -9,6 +9,7 @@
 #include <stdlib.h>
 #include "/Users/haoyuwang/Desktop/Deep Terminator/Deep Terminator/AI Engine/board.h"
 #include "/Users/haoyuwang/Desktop/Deep Terminator/Deep Terminator/AI Engine/array.h"
+#include "/Users/haoyuwang/Desktop/Deep Terminator/Deep Terminator/AI Engine/init.h"
 
 void put(int index) {
     pos = append(pos, index);
@@ -39,4 +40,5 @@ void removeAllPieces(void) {
             patCurrent.pat[i][j] = 0;
     }
     moveCount = 0;
+    init();
 }

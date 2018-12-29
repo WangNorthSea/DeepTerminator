@@ -114,7 +114,7 @@ void initHash(void) {
 #endif
 
 void init(void) {
-    int i, j;
+    int i, j, k;
     for (i = 0; i < 225; i++)
         board[i] = Empty;
     pos = (int *)malloc(sizeof(int));
@@ -130,6 +130,17 @@ void init(void) {
             initialPat.pat[i][j] = 0;
     }
     patHistory[0] = initialPat;
+    
+    for (i = 0; i < 225; i++)
+        refreshed[i] = 0;
+    
+    for (i = 0; i < 225; i++) {
+        for (j = 0; j < 2; j++) {
+            for (k = 0; k < 10; k++)
+                candidates[i].pat[j][k] = 0;
+        }
+    }
+    
     initPatMap();
 #ifdef HASH
     initHash();

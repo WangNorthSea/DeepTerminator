@@ -321,30 +321,46 @@ void quickSort(int * Array, int len, int * indexArray, int descend) {
     }
 }
 
-int * newPattern(char * board, int index, int color) {
+void newPattern(char * board, int index) {
     int i;
-    int * newPats = (int *)malloc(sizeof(int) * 10);
-    memset(newPats, 0, sizeof(int) * 10);
+    for (i = 0; i < 4; i++)
+        candidates[index].pat[0][patMap[getPatternCode(board, index, i) ^ (Black << 10)] & 15]++;
+    for (i = 0; i < 4; i++)
+        candidates[index].pat[1][patMap[getPatternCode(board, index, i) ^ (White << 10)] >> 4]++;
     
-    if (color == Black) {
-        for (i = 0; i < 4; i++)
-            newPats[patMap[getPatternCode(board, index, i) ^ (Black << 10)] & 15]++;
-    }
-    else {
-        for (i = 0; i < 4; i++)
-            newPats[patMap[getPatternCode(board, index, i) ^ (White << 10)] >> 4]++;
-    }
-    
-    return newPats;
 }
 
-int getScoreForSort(int * selfPats, int * enemyPats) {
+void clearPattern(int pat[2][10]) {
+    int i, j;
+    for (i = 0; i < 2; i++) {
+        for (j = 0; j < 9; j++)
+            pat[i][j] = 0;
+    }
+}
+
+int * refreshCandidates(char * board) {
+    int i;
+    int * indexArray = findSpace(board);
+    int spaceCount = intCount(indexArray);
+    
+    for (i = 0; i < spaceCount; i++) {
+        if (!refreshed[indexArray[i]]) {
+            refreshed[indexArray[i]] = 1;
+            clearPattern(candidates[indexArray[i]].pat);
+            newPattern(board, indexArray[i]);
+        }
+    }
+    
+    return indexArray;
+}
+
+int getScoreForSort(int index, int color) {
     int i;
     int selfScore = 0, enemyScore = 0;
     
     for (i = 0; i < 9; i++) {
-        selfScore += selfPats[i] * scoreForSort[i];
-        enemyScore += enemyPats[i] * scoreForSort[i];
+        selfScore += candidates[index].pat[color - 1][i] * scoreForSort[i];
+        enemyScore += candidates[index].pat[color ^ 3 - 1][i] * scoreForSort[i];
     }
     
     return selfScore + enemyScore / 2;
@@ -352,9 +368,8 @@ int getScoreForSort(int * selfPats, int * enemyPats) {
 
 int * generateCAND(char * board, int color) {
     int i;
-    int * spaceArray = findSpace(board);
-    int spaceCount = intCount(spaceArray);
-    int * newPats;
+    int * cands = refreshCandidates(board);
+    int spaceCount = intCount(cands);
     int * indexArray = (int *)malloc(sizeof(int));
     indexArray[0] = -1;
     
@@ -362,13 +377,10 @@ int * generateCAND(char * board, int color) {
 restart:
     if (patCurrent.pat[color - 1][RushFour] || patCurrent.pat[color - 1][LiveFour]) {
         for (i = 0; i < spaceCount; i++) {
-            newPats = newPattern(board, spaceArray[i], color);
-            if (newPats[Five]) {
-                indexArray = append(indexArray, spaceArray[i]);
-                free(newPats);
+            if (candidates[cands[i]].pat[color - 1][Five]) {
+                indexArray = append(indexArray, cands[i]);
                 break;
             }
-            free(newPats);
         }
         
         if (i == spaceCount) {
@@ -380,13 +392,10 @@ restart:
     }
     else if (patCurrent.pat[(color ^ 3) - 1][RushFour] || patCurrent.pat[(color ^ 3) - 1][LiveFour]) {
         for (i = 0; i < spaceCount; i++) {
-            newPats = newPattern(board, spaceArray[i], color ^ 3);
-            if (newPats[Five]) {
-                indexArray = append(indexArray, spaceArray[i]);
-                free(newPats);
+            if (candidates[cands[i]].pat[color ^ 3 - 1][Five]) {
+                indexArray = append(indexArray, cands[i]);
                 break;
             }
-            free(newPats);
         }
         
         if (i == spaceCount) {
@@ -398,13 +407,10 @@ restart:
     }
     else if (patCurrent.pat[color - 1][LiveThree]) {
         for (i = 0; i < spaceCount; i++) {
-            newPats = newPattern(board, spaceArray[i], color);
-            if (newPats[LiveFour]) {
-                indexArray = append(indexArray, spaceArray[i]);
-                free(newPats);
+            if (candidates[cands[i]].pat[color - 1][LiveFour]) {
+                indexArray = append(indexArray, cands[i]);
                 break;
             }
-            free(newPats);
         }
         
         if (i == spaceCount) {
@@ -416,22 +422,16 @@ restart:
     else if (patCurrent.pat[(color ^ 3) - 1][LiveThree]) {
         unsigned char enemyLiveFour = 0;
         for (i = 0; i < spaceCount; i++) {
-            newPats = newPattern(board, spaceArray[i], color ^ 3);
-            if (newPats[LiveFour] || newPats[RushFour]) {
+            if (candidates[cands[i]].pat[color ^ 3 - 1][LiveFour] || candidates[cands[i]].pat[color ^ 3 - 1][RushFour]) {
                 enemyLiveFour++;
-                indexArray = append(indexArray, spaceArray[i]);
-                free(newPats);
+                indexArray = append(indexArray, cands[i]);
                 continue;
             }
-            free(newPats);
             
-            newPats = newPattern(board, spaceArray[i], color);
-            if (newPats[RushFour]) {
-                indexArray = append(indexArray, spaceArray[i]);
-                free(newPats);
+            if (candidates[cands[i]].pat[color - 1][RushFour]) {
+                indexArray = append(indexArray, cands[i]);
                 continue;
             }
-            free(newPats);
         }
         
         if (!enemyLiveFour) {
@@ -444,20 +444,13 @@ restart:
     
     if (indexArray[0] == -1) {
         int * scoreArray = (int *)malloc(sizeof(int) * spaceCount);
-        int * selfPats;
-        int * enemyPats;
-        for (i = 0; i < spaceCount; i++) {
-            selfPats = newPattern(board, spaceArray[i], color);
-            enemyPats = newPattern(board, spaceArray[i], color ^ 3);
-            scoreArray[i] = getScoreForSort(selfPats, enemyPats);
-            free(selfPats);
-            free(enemyPats);
-        }
-        quickSort(scoreArray, spaceCount, spaceArray, 1);
+        for (i = 0; i < spaceCount; i++)
+            scoreArray[i] = getScoreForSort(cands[i], color);
+        quickSort(scoreArray, spaceCount, cands, 1);
         
         if (spaceCount > ChildNodes) {
-            spaceArray = (int *)realloc(spaceArray, sizeof(int) * (ChildNodes + 1));
-            spaceArray[ChildNodes] = -1;
+            cands = (int *)realloc(cands, sizeof(int) * (ChildNodes + 1));
+            cands[ChildNodes] = -1;
 #ifdef HISTORY
             spaceCount = ChildNodes;
 #endif
@@ -466,15 +459,15 @@ restart:
 #ifdef HISTORY
         scoreArray = (int *)realloc(scoreArray, sizeof(int) * spaceCount);
         for (i = 0; i < spaceCount; i++)
-            scoreArray[i] = historyTable[spaceArray[i]];
-        quickSort(scoreArray, spaceCount, spaceArray, 1);
+            scoreArray[i] = historyTable[cands[i]];
+        quickSort(scoreArray, spaceCount, cands, 1);
 #endif
         free(scoreArray);
         free(indexArray);
-        return spaceArray;
+        return cands;
     }
     else {
-        free(spaceArray);
+        free(cands);
         return indexArray;
     }
 }

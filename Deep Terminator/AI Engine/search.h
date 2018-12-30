@@ -10,8 +10,16 @@
 #define search_h
 
 extern int cut;
+extern unsigned char terminate;
+extern long terminateTime;
 
 extern int search(char * board, int color);
+extern void ponder(void);
+
+#ifdef Ponder
+extern int enemyIndex;
+extern unsigned char pondering;
+#endif
 
 #ifdef HISTORY
 extern int historyTable[225];

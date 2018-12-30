@@ -15,4 +15,8 @@ extern int hashHit;
 extern int killerHit;
 #endif
 
+#ifdef Ponder
+extern int ponderIndex;
+#endif
+
 #endif /* main_h */

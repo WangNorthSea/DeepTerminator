@@ -35,6 +35,11 @@ struct bestLine {
 time_t terminateTime;
 unsigned char terminate = 0;
 
+#ifdef Ponder
+int enemyIndex = 0;
+unsigned char pondering = 0;
+#endif
+
 #ifdef HISTORY
 int historyTable[225];
 #endif
@@ -219,8 +224,13 @@ int alphaBeta(char * board, int depth, int alpha, int beta, int color, struct be
             score = alpha;
         
 #ifdef Debug
+#ifdef Ponder
+        if (depth == maxDepth && !pondering)
+            printf("%s = %d\n", transIndexToCoordinate(indexArray[i]), score);
+#else
         if (depth == maxDepth)
             printf("%s = %d\n", transIndexToCoordinate(indexArray[i]), score);
+#endif
 #endif
         
         if (score >= beta) {
@@ -321,7 +331,11 @@ int search(char * board, int color) {
     int bests[Depth] = {0};
     struct bestLine * bL = NULL;
     
+#ifdef Ponder
+    terminateTime = pondering ? time(NULL) + 999 : time(NULL) + timeLimit;
+#else
     terminateTime = time(NULL) + timeLimit;
+#endif
     terminate = 0;
     
     for (i = 0; i < 225; i++)
@@ -342,10 +356,14 @@ int search(char * board, int color) {
             bestScore = alphaBeta(boardToSearch, i, Alpha, Beta, color, bL, i, bests[0]);
         else
             bestScore = alphaBeta(boardToSearch, i, Alpha, Beta, color, bL, i, bests[0]);
-        for (j = 0; j < Depth; j++)
+        for (j = 0; j < Depth; j++) {
+            if (j == 1 && terminate)
+                continue;
             bests[j] = bL -> indexes[j];
+        }
         
         decidedIndex = bests[0];
+        
 #ifdef Debug
         if (color == Black)
             printf("Black:%s  Score:%d\n", transIndexToCoordinate(decidedIndex), bestScore);
@@ -365,6 +383,9 @@ int search(char * board, int color) {
         
         if (terminate)
             break;
+        
+        if (i == 8 && terminateTime - time(NULL) <= 5)
+            break;
             
         if (i < Depth) {
 #ifdef Debug
@@ -377,6 +398,25 @@ int search(char * board, int color) {
         }
     }
     
+#ifdef Ponder
+    if (bests[1])
+        enemyIndex = bests[1];
+#endif
+    
     free(bL);
     return decidedIndex;
 }
+
+#ifdef Ponder
+void ponder(void) {
+    int decidedIndex;
+    pondering = 1;
+    decidedIndex = search(board, intCount(pos) % 2 != 0 ? Black : White);   //由于之前调用putPiece函数没有改变pos，所以实际落子数为intCount(pos) + 1
+    if (!pondering)
+        ponderIndex = decidedIndex;
+    else {
+        pondering = 0;
+        ponderIndex = decidedIndex;
+    }
+}
+#endif

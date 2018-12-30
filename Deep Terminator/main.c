@@ -8,9 +8,10 @@
 
 #include <stdio.h>
 #include <string.h>
+#include <pthread.h>
+#include "AI Engine/settings.h"
 #include "AI Engine/board.h"
 #include "AI Engine/array.h"
-#include "AI Engine/settings.h"
 #include "AI Engine/init.h"
 #include "AI Engine/search.h"
 #include "AI Engine/win.h"
@@ -23,6 +24,10 @@
 int evaNodes = 0;
 int hashHit = 0;
 int killerHit = 0;
+#endif
+
+#ifdef Ponder
+int ponderIndex = 0;
 #endif
 
 void printPats(void) {
@@ -62,6 +67,7 @@ int main(void) {
     
     while (1) {
         scanf("%s", input);
+    enemyHasInput:
         if (!strcmp(input, "calc")) {
             if (intCount(pos) % 2 != 0)
                 decidedIndex = search(board, White);
@@ -79,7 +85,6 @@ int main(void) {
             cut = 0;
             killerHit = 0;
 #endif
-            
             whoWin = checkWhoWin();
             if (whoWin == Black) {
                 printf("Black wins!\n");
@@ -89,6 +94,65 @@ int main(void) {
                 printf("White wins!\n");
                 removeAllPieces();
             }
+            
+#ifdef Ponder
+            int lastEnemyIndex = 0;
+        continuePonder:
+            if (!whoWin && enemyIndex != lastEnemyIndex) {
+                lastEnemyIndex = enemyIndex;
+                putPiece(board, lastEnemyIndex, intCount(pos) % 2 != 0 ? White : Black);
+                pthread_t ponderThread;
+                pthread_create(&ponderThread, NULL, (void *)ponder, NULL);
+                
+                char enemyInput[10];
+                scanf("%s", enemyInput);
+                
+                if (transCoordinateToIndex(enemyInput) != lastEnemyIndex) {  //对手落点预测失败，终止思考
+                    terminate = 1;
+                    int loop;
+                    for (loop = 0; loop < 10; loop++)
+                        input[loop] = enemyInput[loop];
+                    takePiece(board, lastEnemyIndex, intCount(pos) % 2 != 0 ? White : Black);   //由于之前调用putPiece函数没有改变pos，所以实际落子数为intCount(pos) + 1
+                    goto enemyHasInput;
+                }
+                else {  //对手落点预测成功，继续思考
+                    terminateTime = time(NULL) + timeLimit;
+                    pondering = 0;
+                }
+                pthread_join(ponderThread, NULL);
+                takePiece(board, lastEnemyIndex, intCount(pos) % 2 != 0 ? White : Black);   //由于之前调用putPiece函数没有改变pos，所以实际落子数为intCount(pos) + 1
+                
+                put(lastEnemyIndex);
+                
+                whoWin = checkWhoWin();
+                if (whoWin == Black) {
+                    printf("Black wins!\n");
+                    removeAllPieces();
+                    continue;
+                }
+                else if (whoWin == White) {
+                    printf("White wins!\n");
+                    removeAllPieces();
+                    continue;
+                }
+                
+                put(ponderIndex);
+                
+                whoWin = checkWhoWin();
+                if (whoWin == Black) {
+                    printf("Black wins!\n");
+                    removeAllPieces();
+                    continue;
+                }
+                else if (whoWin == White) {
+                    printf("White wins!\n");
+                    removeAllPieces();
+                    continue;
+                }
+                
+                goto continuePonder;
+            }
+#endif
         }
         else if (!strcmp(input, "exit"))
             break;

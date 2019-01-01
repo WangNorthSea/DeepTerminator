@@ -418,7 +418,7 @@ restart:
         for (i = 0; i < spaceCount; i++) {
             if (candidates[cands[i]].pat[color - 1][LiveFour]) {
                 indexArray = append(indexArray, cands[i]);
-                break;
+                continue;
             }
         }
         

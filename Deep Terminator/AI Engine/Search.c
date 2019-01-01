@@ -280,7 +280,7 @@ int alphaBeta(char * board, int depth, int alpha, int beta, int color, struct be
     }
     
 #ifdef HASH
-    if (maxValue == -10000000 || maxValue == 10000000) {
+    if (maxValue == -10000000) {
         zobristTable[indexInHash].key = hashKey;
         zobristTable[indexInHash].kind = overNode;
         zobristTable[indexInHash].depth = 100;
@@ -399,7 +399,7 @@ int search(char * board, int color) {
     }
     
 #ifdef Ponder
-    if (bests[1])
+    if (bests[1] && bests[0] != bests[1])
         enemyIndex = bests[1];
 #endif
     

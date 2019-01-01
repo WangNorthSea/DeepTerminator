@@ -75,6 +75,10 @@ int main(void) {
                 decidedIndex = search(board, Black);
             put(decidedIndex);
             
+            for (int s = 0; s < intCount(pos); s++)
+                printf("%s  ", transIndexToCoordinate(pos[s]));
+            printf("\n");
+            
 #ifdef Debug
             printf("evaluated nodes = %d\n", evaNodes);
             printf("alphaBeta cut = %d\n", cut);
@@ -109,6 +113,7 @@ int main(void) {
                 
                 if (transCoordinateToIndex(enemyInput) != lastEnemyIndex) {  //对手落点预测失败，终止思考
                     terminate = 1;
+                    pthread_join(ponderThread, NULL);
                     int loop;
                     for (loop = 0; loop < 10; loop++)
                         input[loop] = enemyInput[loop];
@@ -150,6 +155,10 @@ int main(void) {
                     continue;
                 }
                 
+                for (int s = 0; s < intCount(pos); s++)
+                    printf("%s  ", transIndexToCoordinate(pos[s]));
+                printf("\n");
+                
                 goto continuePonder;
             }
 #endif
@@ -167,6 +176,10 @@ int main(void) {
 #ifdef Debug
             printPats();
 #endif
+            
+            for (int s = 0; s < intCount(pos); s++)
+                printf("%s  ", transIndexToCoordinate(pos[s]));
+            printf("\n");
             
 #ifdef Renju
             if (checkForbidMove(board, transCoordinateToIndex(input))) {

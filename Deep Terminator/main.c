@@ -49,6 +49,7 @@ void manVSAI(int AIPiece) {
                 break;
             else if (!strcmp(input, "remove")) {
                 removePiece();
+                removePiece();
                 printBoard();
             }
             else {
@@ -93,8 +94,14 @@ void manVSAI(int AIPiece) {
                 
 #ifdef Ponder
                 int lastEnemyIndex = 0;
+                int ponderCheckLoop;
             continuePonder:
-                if (!whoWin && enemyIndex != lastEnemyIndex) {
+                for (ponderCheckLoop = 0; ponderCheckLoop < intCount(pos); ponderCheckLoop++) {
+                    if (enemyIndex == pos[ponderCheckLoop])
+                        break;
+                }
+
+                if (!whoWin && enemyIndex != lastEnemyIndex && ponderCheckLoop == intCount(pos)) {
                     lastEnemyIndex = enemyIndex;
                     putPiece(board, lastEnemyIndex, White);
                     pthread_t ponderThread;
@@ -163,6 +170,7 @@ void manVSAI(int AIPiece) {
                 break;
             else if (!strcmp(input, "remove")) {
                 removePiece();
+                removePiece();
                 printBoard();
             }
             else {
@@ -213,8 +221,14 @@ void manVSAI(int AIPiece) {
                 
 #ifdef Ponder
                 int lastEnemyIndex = 0;
+                int ponderCheckLoop;
             continuePonderWhite:
-                if (!whoWin && enemyIndex != lastEnemyIndex) {
+                for (ponderCheckLoop = 0; ponderCheckLoop < intCount(pos); ponderCheckLoop++) {
+                    if (enemyIndex == pos[ponderCheckLoop])
+                        break;
+                }
+                
+                if (!whoWin && enemyIndex != lastEnemyIndex && ponderCheckLoop == intCount(pos)) {
                     lastEnemyIndex = enemyIndex;
                     putPiece(board, lastEnemyIndex, Black);
                     pthread_t ponderThread;

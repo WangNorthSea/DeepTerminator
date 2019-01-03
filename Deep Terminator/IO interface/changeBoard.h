@@ -11,6 +11,5 @@
 
 extern void put(int index);
 extern void removePiece(void);
-extern void removeAllPieces(void);
 
 #endif /* changeBoard_h */

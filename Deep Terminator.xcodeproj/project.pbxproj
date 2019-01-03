@@ -12,6 +12,7 @@
 		3034A3B721C52A2000E7B3DE /* Renju.c in Sources */ = {isa = PBXBuildFile; fileRef = 3034A3B621C52A2000E7B3DE /* Renju.c */; };
 		3075D3C321CE2AB10098267A /* Zobrist.c in Sources */ = {isa = PBXBuildFile; fileRef = 3075D3C221CE2AB10098267A /* Zobrist.c */; };
 		307F153521C1E18800324B07 /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = 307F153421C1E18800324B07 /* main.c */; };
+		3091734B21DD8BED0060A248 /* CLI.c in Sources */ = {isa = PBXBuildFile; fileRef = 3091734A21DD8BED0060A248 /* CLI.c */; };
 		3098805C21C1F93B005CA395 /* ArrayOp.c in Sources */ = {isa = PBXBuildFile; fileRef = 3098805B21C1F93B005CA395 /* ArrayOp.c */; };
 		3098805E21C20184005CA395 /* ChangeBoard.c in Sources */ = {isa = PBXBuildFile; fileRef = 3098805D21C20184005CA395 /* ChangeBoard.c */; };
 		3098806021C202D1005CA395 /* Initialize.c in Sources */ = {isa = PBXBuildFile; fileRef = 3098805F21C202D1005CA395 /* Initialize.c */; };
@@ -50,10 +51,12 @@
 		3023C59121CBDD3A001BCEA9 /* patterns.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = patterns.h; sourceTree = "<group>"; };
 		3023C59221CBDD3A001BCEA9 /* Patterns.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = Patterns.c; sourceTree = "<group>"; };
 		3034A3B621C52A2000E7B3DE /* Renju.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = Renju.c; sourceTree = "<group>"; };
-		304DE4CE21DB2B3A00877C4B /* Deep Terminator */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; name = "Deep Terminator"; path = "/Users/haoyuwang/Desktop/Deep Terminator/build/Debug/Deep Terminator"; sourceTree = "<absolute>"; };
 		3075D3C121CE2AB10098267A /* zobrist.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = zobrist.h; sourceTree = "<group>"; };
 		3075D3C221CE2AB10098267A /* Zobrist.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = Zobrist.c; sourceTree = "<group>"; };
 		307F153421C1E18800324B07 /* main.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
+		3091734821DD89BE0060A248 /* Deep Terminator */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; name = "Deep Terminator"; path = "/Users/haoyuwang/Desktop/Deep Terminator/build/Debug/Deep Terminator"; sourceTree = "<absolute>"; };
+		3091734A21DD8BED0060A248 /* CLI.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = CLI.c; sourceTree = "<group>"; };
+		3091734C21DD8BF70060A248 /* cli.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = cli.h; sourceTree = "<group>"; };
 		3098805B21C1F93B005CA395 /* ArrayOp.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ArrayOp.c; sourceTree = "<group>"; };
 		3098805D21C20184005CA395 /* ChangeBoard.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ChangeBoard.c; sourceTree = "<group>"; };
 		3098805F21C202D1005CA395 /* Initialize.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = Initialize.c; sourceTree = "<group>"; };
@@ -93,6 +96,7 @@
 				301AC7AE21CBE72200741FAE /* main.h */,
 				307F153B21C1E1D100324B07 /* IO interface */,
 				307F153C21C1E21700324B07 /* AI Engine */,
+				3091734921DD89D10060A248 /* CLI */,
 			);
 			path = "Deep Terminator";
 			sourceTree = "<group>";
@@ -138,6 +142,15 @@
 			path = "AI Engine";
 			sourceTree = "<group>";
 		};
+		3091734921DD89D10060A248 /* CLI */ = {
+			isa = PBXGroup;
+			children = (
+				3091734C21DD8BF70060A248 /* cli.h */,
+				3091734A21DD8BED0060A248 /* CLI.c */,
+			);
+			path = CLI;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -155,7 +168,7 @@
 			);
 			name = "Deep Terminator";
 			productName = "Deep Terminator";
-			productReference = 304DE4CE21DB2B3A00877C4B /* Deep Terminator */;
+			productReference = 3091734821DD89BE0060A248 /* Deep Terminator */;
 			productType = "com.apple.product-type.tool";
 		};
 /* End PBXNativeTarget section */
@@ -203,6 +216,7 @@
 				30CF996B21C4914E00A0EC68 /* CheckWin.c in Sources */,
 				3075D3C321CE2AB10098267A /* Zobrist.c in Sources */,
 				30EBD05921C3FE1F00A9E6AA /* Search.c in Sources */,
+				3091734B21DD8BED0060A248 /* CLI.c in Sources */,
 				3098805E21C20184005CA395 /* ChangeBoard.c in Sources */,
 				3023C59321CBDD3A001BCEA9 /* Patterns.c in Sources */,
 				3098806321C206ED005CA395 /* Trans.c in Sources */,

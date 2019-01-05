@@ -17,27 +17,32 @@
 #define White 2
 #define Extra 3
 
-char board[225];
-int * pos;
+char board[225];      //棋盘数组，按照从左上到右下共225个点的顺序存储整张棋盘，0代表空位，1代表黑子，2代表白子
+int * pos;            //落子数组，按落子顺序记录落子坐标所对应的board数组的下标
 
-struct pattern {
+struct pattern {      //棋型结构体
     int pat[2][10];   //第一个下标0代表黑子棋型，1代表白子棋型
 };
 
-struct candPoint {
+struct candPoint {    //落点结构体，用于搜索过程中生成落点
     int pat[2][10];
 };
 
-unsigned short int moveCount = 0;
-struct pattern patCurrent;
-struct pattern patHistory[256];
-unsigned char refreshed[225];
-struct candPoint candidates[225];
+unsigned short int moveCount = 0;   //记录当前的双方棋型存储在patHistory数组中的位置
+struct pattern patCurrent;          //表示当前双方棋型
+struct pattern patHistory[256];     //按落子顺序存储整局中双方的棋型
+unsigned char refreshed[225];       //标记棋盘上225个点的棋型是否需要更新，用于搜索过程中生成落点
+struct candPoint candidates[225];   //存储棋盘上225个点的棋型，用于搜索过程中生成落点
 
 int minimum(int a, int b) {
     return a - b < 0 ? a : b;
 }
 
+/*
+ 本函数用于获取以棋盘上某个点为中心，长度为11个点的二进制编码，一共22位，每2位表示一个点，00代表空位，
+ 01代表黑子，10代表白子，11代表超出棋盘边界的部分
+ 传入参数direction代表获取的方向，0代表横向，1代表纵向，2代表左上到右下，3代表右上到左下
+ */
 unsigned int getPatternCode(char * board, int index, int direction) {
     int i;
     unsigned int pcode = 0;
@@ -93,6 +98,9 @@ unsigned int getPatternCode(char * board, int index, int direction) {
     return pcode;
 }
 
+/*
+ 本函数用于棋盘发生变化时，将以变化的点为中心半径为5的范围内的点标记为棋型需要更新的状态
+ */
 void markFalse(int index) {
     int i;
     int leftLimit = -(index % 15);
@@ -124,10 +132,12 @@ void markFalse(int index) {
     }
 }
 
-//落子时正常调用即可，即时改变局面双方棋型
+/*
+ 本函数用于在搜索过程中落子，即时改变哈希键值与双方棋型
+ */
 void putPiece(char * board, int index, int color) {
 #ifdef HASH
-    hashKey ^= zobristMap[index][color - 1];
+    hashKey ^= zobristMap[index][color - 1];   //更新哈希键值
 #endif
     int i;
     unsigned char pats[4];
@@ -145,9 +155,9 @@ void putPiece(char * board, int index, int color) {
         patCurrent.pat[1][pats[i] >> 4]--;
     }
     
-    markFalse(index);
+    markFalse(index);   //将受到影响的点标记为棋型需要更新
     
-    board[index] = color;
+    board[index] = color;   //在棋盘上落子
     pats2[0] = patMap[getPatternCode(board, index, 0)];
     pats2[1] = patMap[getPatternCode(board, index, 1)];
     pats2[2] = patMap[getPatternCode(board, index, 2)];
@@ -197,17 +207,20 @@ void putPiece(char * board, int index, int color) {
     }
     
     moveCount++;
-    patHistory[moveCount] = patCurrent;
+    patHistory[moveCount] = patCurrent;    //存储当前双方棋型
 }
 
+/*
+ 本函数用于在搜索过程中从棋盘上移除棋子，即时改变哈希键值，回滚双方棋型
+ */
 void takePiece(char * board, int index, int color) {
 #ifdef HASH
-    hashKey ^= zobristMap[index][color - 1];
+    hashKey ^= zobristMap[index][color - 1];    //更新哈希键值
 #endif
     
-    markFalse(index);
+    markFalse(index);   //将受到影响的点标记为棋型需要更新
     
     moveCount--;
-    board[index] = Empty;
-    patCurrent = patHistory[moveCount];
+    board[index] = Empty;   //从棋盘上移除棋子
+    patCurrent = patHistory[moveCount];    //从patHistory数组中取出存储过的落子前双方棋型
 }

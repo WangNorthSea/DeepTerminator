@@ -24,39 +24,49 @@
 #include "CLI/cli.h"
 
 #ifdef Debug
-int evaNodes = 0;
-int hashHit = 0;
-int killerHit = 0;
+int evaNodes = 0;         //记录搜索过程中评估了多少局面
+int hashHit = 0;          //记录搜索过程中置换表命中次数
+int killerHit = 0;        //记录搜索过程中杀手走法表命中次数
 #endif
 
 #ifdef Ponder
-int ponderIndex = 0;
+int ponderIndex = 0;      //用于后台思考的对方落子点
 #endif
 
+/*
+ 本函数用于检查当前是否已平局
+ */
+int checkDraw(void) {
+    return intCount(pos) == 225 ? 1 : 0;
+}
+
+/*
+ 本函数用于进行人机对战，参数AIPiece为AI所执的棋子
+ */
 void manVSAI(int AIPiece) {
     int whoWin = 0;
-    int decidedIndex = 0;
+    int decidedIndex = 0;       //搜索得到的最佳着法
     char input[10];
     
     if (AIPiece == Black) {
-        put(transCoordinateToIndex("h8"));
+        put(transCoordinateToIndex("h8"));    //开局先在h8落子
         printBoard();
         
         while (1) {
             scanf("%s", input);
         enemyHasInput:
-            if (!strcmp(input, "exit"))
+            if (!strcmp(input, "exit"))       //输入的是退出命令
                 break;
-            else if (!strcmp(input, "remove")) {
-                removePiece();
+            else if (!strcmp(input, "remove")) {     //输入的是悔棋命令
+                removePiece();        //因为要先删掉AI计算出来的落子，再删掉玩家落下的子，所以removePiece要调用两遍
                 removePiece();
                 printBoard();
             }
             else {
-                put(transCoordinateToIndex(input));
+                put(transCoordinateToIndex(input));   //输入的是落子坐标
                 printBoard();
                 
-                whoWin = checkWhoWin();
+                whoWin = checkWhoWin();            //检查胜利
                 if (whoWin == Black) {
                     printf("\nBlack wins!\n");
                     break;
@@ -66,8 +76,13 @@ void manVSAI(int AIPiece) {
                     break;
                 }
                 
+                if (checkDraw()) {                //检查平局
+                    printf("\nDraw!\n");
+                    break;
+                }
+                
                 printf("\nAI is thinking...Please wait...\n");
-                decidedIndex = search(board, Black);
+                decidedIndex = search(board, Black);        //AI进行搜索
                 put(decidedIndex);
                 
                 printBoard();
@@ -82,6 +97,7 @@ void manVSAI(int AIPiece) {
                 cut = 0;
                 killerHit = 0;
 #endif
+                
                 whoWin = checkWhoWin();
                 if (whoWin == Black) {
                     printf("\nBlack wins!\n");
@@ -92,16 +108,21 @@ void manVSAI(int AIPiece) {
                     break;
                 }
                 
+                if (checkDraw()) {
+                    printf("\nDraw!\n");
+                    break;
+                }
+                
 #ifdef Ponder
                 int lastEnemyIndex = 0;
                 int ponderCheckLoop;
             continuePonder:
-                for (ponderCheckLoop = 0; ponderCheckLoop < intCount(pos); ponderCheckLoop++) {
+                for (ponderCheckLoop = 0; ponderCheckLoop < intCount(pos); ponderCheckLoop++) {    //如果后台思考要用的对方落点已经有棋子了，则不进行后台思考，这是因为由于置换表的存在，bestLine的获取不是十分稳定，有时候会出bug
                     if (enemyIndex == pos[ponderCheckLoop])
                         break;
                 }
 
-                if (!whoWin && enemyIndex != lastEnemyIndex && ponderCheckLoop == intCount(pos)) {
+                if (!whoWin && enemyIndex != lastEnemyIndex && ponderCheckLoop == intCount(pos)) {  //如果没有胜利且enemyIndex正常，则进行后台思考
                     lastEnemyIndex = enemyIndex;
                     putPiece(board, lastEnemyIndex, White);
                     pthread_t ponderThread;
@@ -127,7 +148,7 @@ void manVSAI(int AIPiece) {
                     pthread_join(ponderThread, NULL);
                     takePiece(board, lastEnemyIndex, White);   //由于之前调用putPiece函数没有改变pos，所以实际落子数为intCount(pos) + 1
                     
-                    put(lastEnemyIndex);
+                    put(lastEnemyIndex);    //落下对方的棋子
                     
                     printBoard();
                     
@@ -141,7 +162,12 @@ void manVSAI(int AIPiece) {
                         break;
                     }
                     
-                    put(ponderIndex);
+                    if (checkDraw()) {
+                        printf("\nDraw!\n");
+                        break;
+                    }
+                    
+                    put(ponderIndex);     //落下后台思考得到的着法
                     
                     printBoard();
                     
@@ -155,7 +181,12 @@ void manVSAI(int AIPiece) {
                         break;
                     }
                     
-                    goto continuePonder;
+                    if (checkDraw()) {
+                        printf("\nDraw!\n");
+                        break;
+                    }
+                    
+                    goto continuePonder;    //预测成功后用新得到的对方最佳着法继续进行后台思考
                 }
 #endif
             }
@@ -187,8 +218,12 @@ void manVSAI(int AIPiece) {
                     break;
                 }
                 
+                if (checkDraw()) {
+                    printf("\nDraw!\n");
+                    break;
+                }
 #ifdef Renju
-                if (checkForbidMove(board, transCoordinateToIndex(input))) {
+                if (checkForbidMove(board, transCoordinateToIndex(input))) {       //因为玩家执黑，所以要检查黑棋是否触犯禁手
                     printf("\nWhite wins! Black has made a forbidden move!\n");
                     break;
                 }
@@ -219,6 +254,10 @@ void manVSAI(int AIPiece) {
                     break;
                 }
                 
+                if (checkDraw()) {
+                    printf("\nDraw!\n");
+                    break;
+                }
 #ifdef Ponder
                 int lastEnemyIndex = 0;
                 int ponderCheckLoop;
@@ -256,13 +295,6 @@ void manVSAI(int AIPiece) {
                     
                     put(lastEnemyIndex);
                     
-#ifdef Renju
-                    if (checkForbidMove(board, lastEnemyIndex)) {
-                        printf("\nWhite wins! Black has made a forbidden move!\n");
-                        break;
-                    }
-#endif
-                    
                     printBoard();
                     
                     whoWin = checkWhoWin();
@@ -272,6 +304,16 @@ void manVSAI(int AIPiece) {
                     }
                     else if (whoWin == White) {
                         printf("\nWhite wins!\n");
+                        break;
+                    }
+#ifdef Renju
+                    if (checkForbidMove(board, lastEnemyIndex)) {
+                        printf("\nWhite wins! Black has made a forbidden move!\n");
+                        break;
+                    }
+#endif
+                    if (checkDraw()) {
+                        printf("\nDraw!\n");
                         break;
                     }
                     
@@ -289,6 +331,11 @@ void manVSAI(int AIPiece) {
                         break;
                     }
                     
+                    if (checkDraw()) {
+                        printf("\nDraw!\n");
+                        break;
+                    }
+                    
                     goto continuePonderWhite;
                 }
 #endif
@@ -297,6 +344,9 @@ void manVSAI(int AIPiece) {
     }
 }
 
+/*
+ 本函数用于进行人人对战
+ */
 void manVSMan(void) {
     int whoWin = 0;
     int decidedIndex = 0;
@@ -306,7 +356,7 @@ void manVSMan(void) {
     while (1) {
         scanf("%s", input);
     enemyHasInput:
-        if (!strcmp(input, "calc")) {
+        if (!strcmp(input, "calc")) {      //输入的是计算指令
             printf("AI is thinking...Please wait...\n");
             if (intCount(pos) % 2 != 0)
                 decidedIndex = search(board, White);
@@ -331,6 +381,11 @@ void manVSMan(void) {
             }
             else if (whoWin == White) {
                 printf("\nWhite wins!\n");
+                break;
+            }
+            
+            if (checkDraw()) {
+                printf("\nDraw!\n");
                 break;
             }
         }
@@ -358,6 +413,11 @@ void manVSMan(void) {
                 printf("\nWhite wins!\n");
                 break;
             }
+            
+            if (checkDraw()) {
+                printf("\nDraw!\n");
+                break;
+            }
         }
     }
 }
@@ -365,10 +425,10 @@ void manVSMan(void) {
 int main(void) {
     char input[10];
     
-    setlocale(LC_ALL,"zh_CN.UTF-8");
+    setlocale(LC_ALL,"zh_CN.UTF-8");     //设置地域为中国，Windows下应改为chs
     
     printf("Initializing...Please wait...\n");
-    init();
+    init();                                         //进行初始化
     printf("Initialization finished!\n");
     
     printf("请选择游戏模式\nA.人机对战\nB.人人对战\n请输入:");

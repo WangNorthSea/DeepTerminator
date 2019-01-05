@@ -11,6 +11,9 @@
 #include "/Users/haoyuwang/Desktop/Deep Terminator/Deep Terminator/AI Engine/array.h"
 #include "/Users/haoyuwang/Desktop/Deep Terminator/Deep Terminator/AI Engine/init.h"
 
+/*
+ 本函数用于在棋盘上落子以及将落子坐标按落子顺序添加到pos数组中
+ */
 void put(int index) {
     pos = append(pos, index);
     if (intCount(pos) % 2 != 0)
@@ -19,6 +22,9 @@ void put(int index) {
         putPiece(board, index, White);
 }
 
+/*
+ 本函数用于从棋盘上移除最后落的一个棋子并且将其从pos数组中删除
+ */
 void removePiece(void) {
     int piececharCount = intCount(pos);
     if (piececharCount % 2 != 0)

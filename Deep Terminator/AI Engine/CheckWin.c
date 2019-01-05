@@ -11,6 +11,9 @@
 #include "init.h"
 #include "evaluate.h"
 
+/*
+ 本函数用于检查双方是否有一方形成五连
+ */
 int checkWhoWin(void) {
     if (patCurrent.pat[0][8])
         return Black;

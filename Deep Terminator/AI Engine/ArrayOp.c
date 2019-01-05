@@ -8,18 +8,27 @@
 
 #include <stdlib.h>
 
+/*
+ 本函数用于计算char型数组元素个数
+ */
 int charCount(char * array) {
     int i = 0;
     while (array[i] != -1) { i++; }
     return i;
 }
 
+/*
+ 本函数用于计算int型数组元素个数，只有用-1表示结尾的int型数组才可以使用
+ */
 int intCount(int * array) {
     int i = 0;
     while (array[i] != -1) { i++; }
     return i;
 }
 
+/*
+ 本函数用于为int型数组在末尾添加新元素，只有用-1表示结尾的int型数组才可以使用
+ */
 int * append(int * array, int value) {
     int len = intCount(array) + 1;
     array = (int *)realloc(array, sizeof(int) * (len + 1));
@@ -27,34 +36,3 @@ int * append(int * array, int value) {
     array[len] = -1;
     return array;
 }
-
-/*char * concat(char * first, char * second) {
-    int i;
-    if (!charCount(first)) {
-        char * new = (char *)malloc(sizeof(int) * (charCount(second) + 1));
-        for (i = 0; i < charCount(second); i++) {
-            new[i] = second[i];
-        }
-        new[i] = -1;
-        return new;
-    }
-    if (!charCount(second)) {
-        char * new = (char *)malloc(sizeof(int) * (charCount(first) + 1));
-        for (i = 0; i < charCount(first); i++) {
-            new[i] = first[i];
-        }
-        new[i] = -1;
-        return new;
-    }
-    int start = charCount(first);
-    int limit = charCount(second) + start;
-    char * new = (char *)malloc(sizeof(int) * (limit + 1));
-    for (i = 0; i < start; i++) {
-        new[i] = first[i];
-    }
-    for (i = start; i < limit; i++) {
-        new[i] = second[i - start];
-    }
-    new[limit] = -1;
-    return new;
-}*/

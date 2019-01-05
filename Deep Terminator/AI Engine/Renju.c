@@ -10,6 +10,9 @@
 #include "init.h"
 #include "board.h"
 
+/*
+ 本函数用于检查黑棋是否触犯禁手
+ */
 int checkForbidMove(char * board, int index) {
     int i, count = 0;
     unsigned char pats[4];
@@ -25,13 +28,13 @@ int checkForbidMove(char * board, int index) {
     pats[3] = patMap[pcode[3]];
     
     for (i = 0; i < 4; i++) {
-        if ((pats[i] & 15) == 5)
+        if ((pats[i] & 15) == 5)     //判断是否同时形成双活三
             count++;
     }
     if (count >= 2)
         return 1;
     
-    //双冲四特判
+    //双冲四特判，这里对应在同一方向形成双冲四的几种情形
     for (i = 0; i < 4; i++)
         if (pcode[i] == 70928 || pcode[i] == 595216 || pcode[i] == 70936 || pcode[i] == 595224)
             return 1;
@@ -44,7 +47,7 @@ int checkForbidMove(char * board, int index) {
     
     count = 0;
     for (i = 0; i < 4; i++) {
-        if ((pats[i] & 15) == 6 || (pats[i] & 15) == 7)
+        if ((pats[i] & 15) == 6 || (pats[i] & 15) == 7)    //判断是否同时形成两个四
             count++;
     }
     if (count >= 2)

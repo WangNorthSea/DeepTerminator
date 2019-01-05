@@ -8,9 +8,9 @@
 
 #include "settings.h"
 
-struct killerNode {
+struct killerNode {               //杀手走法表的单个节点，存储哈希键值与发生beta截断的着法
     unsigned long long int key;
     int index;
 };
 
-struct killerNode killer[hashSize];
+struct killerNode killer[hashSize];    //杀手走法表

@@ -14,16 +14,19 @@
 #include "zobrist.h"
 #include "killer.h"
 
-unsigned char patMap[1 << 22];
+unsigned char patMap[1 << 22];    //存储任何一种可能的22位二进制编码所对应的黑白双方棋型，高四位代表白子棋型，低四位代表黑子棋型
 
+/*
+ 本函数用于初始化patMap数组
+ */
 void initPatMap(void) {
     int i;
-    unsigned char line[11] = {0};
-    for (i = 0; i < (1 << 22); i++) {
+    unsigned char line[11] = {0};  //表示一种可能的22位二进制编码，每个元素代表2位，从0号元素到10号元素分别对应22位的高位到低位，00代表空位，01代表黑子，10代表白子，11代表额外的一种情况
+    for (i = 0; i < (1 << 22); i++) {   //用i遍历任何一个22位二进制数
         int temp = i;
         int j;
         
-        for (j = 10; j >= 0; j--) {
+        for (j = 10; j >= 0; j--) {   //针对每一个i，将该22位二进制数划分成11个点存储进line数组
             line[j] = temp % 4;
             temp /= 4;
         }
@@ -33,6 +36,7 @@ void initPatMap(void) {
         unsigned char pattern = 0;
         unsigned char * left = line + 5, * right = line + 5;
         
+        //识别黑子分布
         for (len = 0, space = 0; left >= line && len < 6 && *left != White && *left != Extra && space < 4; len++, left--) {
             key = key << 1;
             if (*left == Black)
@@ -55,12 +59,12 @@ void initPatMap(void) {
             else
                 space = 0;
         }
-        pattern += patternMap[key];
+        pattern += patternMap[key];       //从patternMap数组取出该种黑子分布对应的黑子棋型存储到pattern的低四位
         
         key = 1;
         left = line + 5;
         right = line + 5;
-        
+        //识别白子分布
         for (len = 0, space = 0; left >= line && len < 6 && *left != Black && *left != Extra && space < 4; len++, left--) {
             key = key << 1;
             if (*left == White)
@@ -83,11 +87,15 @@ void initPatMap(void) {
             else
                 space = 0;
         }
-        pattern += patternMap[key] << 4;
-        patMap[i] = pattern;
+        pattern += patternMap[key] << 4;   //从patternMap数组取出该种白子分布对应的白子棋型存储到pattern的高四位
+        patMap[i] = pattern;               //将该22位二进制数对应的黑白双方棋型存储到patMap数组，高四位代表白子，低四位代表黑子
     }
 }
 
+/*
+ 本函数用于初始化置换表，从hashVal数组中取出32位随机数，两两拼成一个64位随机数存入zobristMap数组中
+ 同时将zobristTable数组进行初始化
+ */
 #ifdef HASH
 void initHash(void) {
     int i;
@@ -114,6 +122,9 @@ void initHash(void) {
 }
 #endif
 
+/*
+ 本函数用于初始化杀手走法表
+ */
 #ifdef KILLER
 void initKiller(void) {
     int i;
@@ -124,13 +135,16 @@ void initKiller(void) {
 }
 #endif
 
+/*
+ 本函数用于在程序启动时初始化所有需要进行初始化的项目
+ */
 void init(void) {
     int i, j, k;
-    for (i = 0; i < 225; i++)
+    for (i = 0; i < 225; i++)    //初始化board数组
         board[i] = Empty;
-    pos = (int *)malloc(sizeof(int));
+    pos = (int *)malloc(sizeof(int));  //初始化pos数组
     pos[0] = -1;
-    for (i = 0; i < 2; i++) {
+    for (i = 0; i < 2; i++) {     //初始化当前双方棋型
         for (j = 0; j < 10; j++)
             patCurrent.pat[i][j] = 0;
     }
@@ -140,24 +154,24 @@ void init(void) {
         for (j = 0; j < 10; j++)
             initialPat.pat[i][j] = 0;
     }
-    patHistory[0] = initialPat;
+    patHistory[0] = initialPat;   //初始化patHistory数组
     
-    for (i = 0; i < 225; i++)
+    for (i = 0; i < 225; i++)     //初始化refreshed数组
         refreshed[i] = 0;
     
-    for (i = 0; i < 225; i++) {
+    for (i = 0; i < 225; i++) {   //初始化candidates数组
         for (j = 0; j < 2; j++) {
             for (k = 0; k < 10; k++)
                 candidates[i].pat[j][k] = 0;
         }
     }
     
-    initPatMap();
+    initPatMap();   //初始化patMap
 #ifdef HASH
-    initHash();
+    initHash();     //初始化置换表
 #endif
     
 #ifdef KILLER
-    initKiller();
+    initKiller();   //初始化杀手走法表
 #endif
 }

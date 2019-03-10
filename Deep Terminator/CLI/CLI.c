@@ -8,9 +8,9 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include "/Users/haoyuwang/Desktop/Deep Terminator/Deep Terminator/IO interface/trans.h"
-#include "/Users/haoyuwang/Desktop/Deep Terminator/Deep Terminator/AI Engine/board.h"
-#include "/Users/haoyuwang/Desktop/Deep Terminator/Deep Terminator/AI Engine/array.h"
+#include "../IOinterface/trans.h"
+#include "../AIEngine/board.h"
+#include "../AIEngine/array.h"
 
 /*
  本函数用于生成可以被打印出来的棋盘数组

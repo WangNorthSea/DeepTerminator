@@ -11,16 +11,16 @@
 #include <string.h>
 #include <locale.h>
 #include <pthread.h>
-#include "AI Engine/settings.h"
-#include "AI Engine/board.h"
-#include "AI Engine/array.h"
-#include "AI Engine/init.h"
-#include "AI Engine/search.h"
-#include "AI Engine/win.h"
-#include "AI Engine/renju.h"
-#include "IO interface/changeBoard.h"
-#include "IO interface/trans.h"
-#include "AI Engine/patterns.h"
+#include "AIEngine/settings.h"
+#include "AIEngine/board.h"
+#include "AIEngine/array.h"
+#include "AIEngine/init.h"
+#include "AIEngine/search.h"
+#include "AIEngine/win.h"
+#include "AIEngine/renju.h"
+#include "IOinterface/changeBoard.h"
+#include "IOinterface/trans.h"
+#include "AIEngine/patterns.h"
 #include "CLI/cli.h"
 
 #ifdef Debug

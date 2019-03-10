@@ -7,9 +7,9 @@
 //
 
 #include <stdlib.h>
-#include "/Users/haoyuwang/Desktop/Deep Terminator/Deep Terminator/AI Engine/board.h"
-#include "/Users/haoyuwang/Desktop/Deep Terminator/Deep Terminator/AI Engine/array.h"
-#include "/Users/haoyuwang/Desktop/Deep Terminator/Deep Terminator/AI Engine/init.h"
+#include "../AIEngine/board.h"
+#include "../AIEngine/array.h"
+#include "../AIEngine/init.h"
 
 /*
  本函数用于在棋盘上落子以及将落子坐标按落子顺序添加到pos数组中

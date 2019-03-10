@@ -20,8 +20,8 @@
 #include "evaluate.h"
 #include "zobrist.h"
 #include "killer.h"
-#include "/Users/haoyuwang/Desktop/Deep Terminator/Deep Terminator/IO interface/trans.h"
-#include "/Users/haoyuwang/Desktop/Deep Terminator/Deep Terminator/main.h"
+#include "../IOinterface/trans.h"
+#include "../main.h"
 
 #ifdef Debug
 int cut = 0;    //记录在最深一次搜索过程中共发生了多少次beta截断
